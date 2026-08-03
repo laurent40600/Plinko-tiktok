@@ -11,7 +11,7 @@ const Renderer = {
 
     ctx: null,
     canvas: null,
-    _bgImageCache: {},
+    _imageCache: {},
 
     /* --------------------------------------------------------
        init(canvasElement)
@@ -25,19 +25,20 @@ const Renderer = {
     },
 
     /* --------------------------------------------------------
-       _getBgImage(src)
-       Retourne l'image de fond mise en cache pour ce chemin,
-       en lançant son chargement au premier appel. Tant qu'elle
-       n'est pas prête, retourne null (le dégradé sert de repli).
+       _getImage(src)
+       Retourne l'image mise en cache pour ce chemin, en lançant
+       son chargement au premier appel. Tant qu'elle n'est pas
+       prête, retourne null (un repli visuel doit être prévu par
+       l'appelant pendant ce court instant).
        -------------------------------------------------------- */
-    _getBgImage(src) {
-        let entry = this._bgImageCache[src];
+    _getImage(src) {
+        let entry = this._imageCache[src];
         if (!entry) {
             const img = new Image();
             entry = { img, loaded: false };
             img.onload = () => { entry.loaded = true; };
             img.src = src;
-            this._bgImageCache[src] = entry;
+            this._imageCache[src] = entry;
         }
         return entry.loaded ? entry.img : null;
     },
@@ -67,7 +68,7 @@ const Renderer = {
 
         // Image de fond du thème (recouvre le dégradé, en mode "cover")
         if (theme.bgImage) {
-            const img = this._getBgImage(theme.bgImage);
+            const img = this._getImage(theme.bgImage);
             if (img) {
                 const scale = Math.max(W / img.width, H / img.height);
                 const dw = img.width * scale;
@@ -214,10 +215,9 @@ const Renderer = {
         for (const zone of Board.bucketZones) {
             const isJackpot = zone.index === CONFIG.BUCKETS.JACKPOT_INDEX;
             const width = zone.xEnd - zone.xStart;
+            const icon = zone.icon ? this._getImage(zone.icon) : null;
 
             ctx.save();
-            ctx.fillStyle = zone.color;
-            ctx.globalAlpha = isJackpot ? 1 : 0.85;
 
             // Léger effet de pulsation pour le bucket jackpot
             const pulseScale = isJackpot
@@ -226,13 +226,29 @@ const Renderer = {
 
             ctx.translate(zone.xStart + width / 2, bucketY + CONFIG.BUCKETS.HEIGHT / 2);
             ctx.scale(pulseScale, pulseScale);
-            ctx.fillRect(-width / 2 + 3, -CONFIG.BUCKETS.HEIGHT / 2, width - 6, CONFIG.BUCKETS.HEIGHT);
 
-            ctx.fillStyle = '#ffffff';
-            ctx.font = `900 ${isJackpot ? 40 : 30}px Segoe UI, Arial`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(`x${zone.value}`, 0, 0);
+            if (icon) {
+                // Icône dessinée en mode "contain" (jamais déformée),
+                // légèrement plus haute que la zone pour laisser
+                // dépasser la couronne du bucket jackpot.
+                const boxW = width - 6;
+                const boxH = CONFIG.BUCKETS.HEIGHT * (isJackpot ? 1.35 : 1.08);
+                const scale = Math.min(boxW / icon.width, boxH / icon.height);
+                const dw = icon.width * scale;
+                const dh = icon.height * scale;
+                ctx.drawImage(icon, -dw / 2, -dh / 2 + (isJackpot ? -6 : 0), dw, dh);
+            } else {
+                // Repli le temps que l'image se charge
+                ctx.fillStyle = zone.color;
+                ctx.globalAlpha = isJackpot ? 1 : 0.85;
+                ctx.fillRect(-width / 2 + 3, -CONFIG.BUCKETS.HEIGHT / 2, width - 6, CONFIG.BUCKETS.HEIGHT);
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `900 ${isJackpot ? 40 : 30}px Segoe UI, Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`x${zone.value}`, 0, 0);
+            }
 
             ctx.restore();
         }

@@ -60,6 +60,7 @@ const Board = {
     _generateBucketZones() {
         const values = CONFIG.BUCKETS.VALUES;
         const colors = CONFIG.BUCKETS.COLORS;
+        const icons = CONFIG.BUCKETS.ICONS;
         const count = values.length;
 
         const marginX = CONFIG.BOARD.BOARD_MARGIN_X * 0.4;
@@ -73,7 +74,8 @@ const Board = {
                 xStart: marginX + i * zoneWidth,
                 xEnd: marginX + (i + 1) * zoneWidth,
                 value: values[i],
-                color: colors[i] || '#ffffff'
+                color: colors[i] || '#ffffff',
+                icon: icons && icons[i]
             });
         }
         return zones;
