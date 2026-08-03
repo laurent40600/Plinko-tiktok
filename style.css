@@ -157,26 +157,16 @@ html, body {
    LOGO — couronne + titre PLINKO
    ============================================================ */
 #ui-logo {
-    top: 130px;
+    top: 135px;
     left: 0;
     right: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-#logo-crown {
-    width: 90px;
-    filter: drop-shadow(0 0 20px gold);
-}
-#logo-title {
-    font-size: 90px;
-    font-weight: 900;
-    letter-spacing: 8px;
-    background: linear-gradient(180deg, #fff6d0 0%, #ffd76a 40%, #b8860b 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+#logo-banner {
+    width: 680px;
+    max-width: 90%;
 }
 
 /* ============================================================
