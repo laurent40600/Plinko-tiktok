@@ -154,22 +154,6 @@ html, body {
 }
 
 /* ============================================================
-   LOGO — couronne + titre PLINKO
-   ============================================================ */
-#ui-logo {
-    top: 135px;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-#logo-banner {
-    width: 680px;
-    max-width: 90%;
-}
-
-/* ============================================================
    PANNEAUX LATÉRAUX (Top Gift / Derniers Lancers)
    ============================================================ */
 .ui-panel {

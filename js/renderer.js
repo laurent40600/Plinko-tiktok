@@ -83,6 +83,29 @@ const Renderer = {
     },
 
     /* --------------------------------------------------------
+       _drawFrame()
+       Dessine le cadre décoratif (colonnes, arche, bandeau du
+       logo, socle du bas) par-dessus toute la scène. L'image est
+       évidée en son centre (zone des picots/buckets) : seuls les
+       bords ornementés sont opaques, le jeu reste visible dedans.
+       -------------------------------------------------------- */
+    _drawFrame() {
+        const ctx = this.ctx;
+        const theme = CONFIG.THEMES.LIST[CONFIG.THEMES.CURRENT];
+        if (!theme.frameImage) return;
+
+        const img = this._getImage(theme.frameImage);
+        if (!img) return;
+
+        const W = CONFIG.LOGICAL_WIDTH;
+        const H = CONFIG.LOGICAL_HEIGHT;
+        const scale = Math.max(W / img.width, H / img.height);
+        const dw = img.width * scale;
+        const dh = img.height * scale;
+        ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+    },
+
+    /* --------------------------------------------------------
        drawScene(debugFlags)
        Dessine la scène complète dans l'ordre : plateau, picots,
        buckets, billes, particules. Applique la transformation
@@ -107,6 +130,8 @@ const Renderer = {
         // Les buckets sont dessinés hors transformation caméra
         // car leur zone reste fixe visuellement (repère joueur)
         this._drawBuckets();
+
+        this._drawFrame();
     },
 
     /* --------------------------------------------------------
