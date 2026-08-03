@@ -54,12 +54,23 @@ const CONFIG = {
     // BUCKETS / MULTIPLICATEURS (ordre gauche → droite, symétrique)
     // ------------------------------------------------------------
     BUCKETS: {
-        VALUES: [0.2, 1, 5, 5, 20, 5, 5, 1, 0.2],
+        VALUES: [0.5, 1, 2, 3, 20, 3, 2, 1, 0.5],
         COLORS: [
             '#8a3fd1', '#2f6fe0', '#2fbf5a', '#2fbf5a',
             '#ffd76a', '#2fbf5a', '#2fbf5a', '#2f6fe0', '#8a3fd1'
         ],
-        JACKPOT_INDEX: 4,          // index du bucket central (x20)
+        ICONS: [
+            'assets/icons/multipliers/x0_5.png',
+            'assets/icons/multipliers/x1.png',
+            'assets/icons/multipliers/x2.png',
+            'assets/icons/multipliers/x3.png',
+            'assets/icons/multipliers/jackpot.png',
+            'assets/icons/multipliers/x3.png',
+            'assets/icons/multipliers/x2.png',
+            'assets/icons/multipliers/x1.png',
+            'assets/icons/multipliers/x0_5.png'
+        ],
+        JACKPOT_INDEX: 4,          // index du bucket central (JACKPOT, x20)
         HEIGHT: 140,
         JACKPOT_PULSE_DURATION: 600 // ms d'animation quand jackpot touché
     },
