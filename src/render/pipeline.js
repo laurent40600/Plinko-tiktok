@@ -13,6 +13,7 @@ import { drawFrame } from './frame.js';
 import { drawLattice, drawPegs } from './board.js';
 import { drawBallTrails, drawBalls } from './balls.js';
 import { drawBuckets } from './buckets.js';
+import { drawParticles } from './particles.js';
 
 export class RenderPipeline {
     /**
@@ -21,8 +22,9 @@ export class RenderPipeline {
      * @param {import('../entities/board.js').Board} deps.board
      * @param {import('../entities/ball.js').BallManager} deps.ballManager
      * @param {import('../core/camera.js').Camera} deps.camera
+     * @param {import('../systems/particles.js').ParticleSystem} deps.particles
      */
-    constructor(canvas, { board, ballManager, camera }) {
+    constructor(canvas, { board, ballManager, camera, particles }) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.ctx.imageSmoothingEnabled = true;
@@ -30,6 +32,7 @@ export class RenderPipeline {
         this.board = board;
         this.ballManager = ballManager;
         this.camera = camera;
+        this.particles = particles;
     }
 
     /** @param {object} debugFlags - { hitbox, vectors, trajectory } */
@@ -45,6 +48,7 @@ export class RenderPipeline {
         drawPegs(ctx, this.board);
         drawBallTrails(ctx, balls, debugFlags.trajectory);
         drawBalls(ctx, balls, debugFlags);
+        drawParticles(ctx, this.particles);
         this.camera.restoreTransform(ctx);
 
         // Les buckets restent hors transformation caméra : leur zone
