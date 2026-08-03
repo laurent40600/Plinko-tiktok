@@ -11,6 +11,7 @@ const Renderer = {
 
     ctx: null,
     canvas: null,
+    _bgImageCache: {},
 
     /* --------------------------------------------------------
        init(canvasElement)
@@ -24,25 +25,60 @@ const Renderer = {
     },
 
     /* --------------------------------------------------------
+       _getBgImage(src)
+       Retourne l'image de fond mise en cache pour ce chemin,
+       en lançant son chargement au premier appel. Tant qu'elle
+       n'est pas prête, retourne null (le dégradé sert de repli).
+       -------------------------------------------------------- */
+    _getBgImage(src) {
+        let entry = this._bgImageCache[src];
+        if (!entry) {
+            const img = new Image();
+            entry = { img, loaded: false };
+            img.onload = () => { entry.loaded = true; };
+            img.src = src;
+            this._bgImageCache[src] = entry;
+        }
+        return entry.loaded ? entry.img : null;
+    },
+
+    /* --------------------------------------------------------
        clear()
        Efface le canvas et redessine le fond du thème courant.
        -------------------------------------------------------- */
     clear() {
         const ctx = this.ctx;
         const theme = CONFIG.THEMES.LIST[CONFIG.THEMES.CURRENT];
+        const W = CONFIG.LOGICAL_WIDTH;
+        const H = CONFIG.LOGICAL_HEIGHT;
 
-        ctx.clearRect(0, 0, CONFIG.LOGICAL_WIDTH, CONFIG.LOGICAL_HEIGHT);
+        ctx.clearRect(0, 0, W, H);
 
         // Fond dégradé selon le thème actif
         const gradient = ctx.createRadialGradient(
-            CONFIG.LOGICAL_WIDTH / 2, CONFIG.LOGICAL_HEIGHT * 0.3, 100,
-            CONFIG.LOGICAL_WIDTH / 2, CONFIG.LOGICAL_HEIGHT * 0.5, CONFIG.LOGICAL_HEIGHT
+            W / 2, H * 0.3, 100,
+            W / 2, H * 0.5, H
         );
         theme.bgGradient.forEach((color, i) => {
             gradient.addColorStop(i / (theme.bgGradient.length - 1), color);
         });
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, CONFIG.LOGICAL_WIDTH, CONFIG.LOGICAL_HEIGHT);
+        ctx.fillRect(0, 0, W, H);
+
+        // Image de fond du thème (recouvre le dégradé, en mode "cover")
+        if (theme.bgImage) {
+            const img = this._getBgImage(theme.bgImage);
+            if (img) {
+                const scale = Math.max(W / img.width, H / img.height);
+                const dw = img.width * scale;
+                const dh = img.height * scale;
+                ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+
+                // Voile sombre léger pour garder les picots/billes lisibles
+                ctx.fillStyle = 'rgba(5, 1, 10, 0.35)';
+                ctx.fillRect(0, 0, W, H);
+            }
+        }
     },
 
     /* --------------------------------------------------------

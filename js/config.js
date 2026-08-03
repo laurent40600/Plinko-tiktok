@@ -136,6 +136,7 @@ const CONFIG = {
             royal: {
                 label: 'Royal',
                 bgGradient: ['#2a1245', '#0d0518', '#05010a'],
+                bgImage: 'assets/backgrounds/royal-throne.jpg',
                 accentColor: '#ffd76a',
                 ballColor: '#c77dff'
             },
