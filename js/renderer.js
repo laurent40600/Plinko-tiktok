@@ -312,6 +312,45 @@ const Renderer = {
     },
 
     /* --------------------------------------------------------
+       _drawBucketDividers()
+       Dessine de fines parois dorées pointues entre les buckets,
+       qui remontent vers le plateau de picots — comme les
+       séparateurs physiques d'un vrai Plinko, pour que les billes
+       semblent tomber directement des picots dans les pochettes.
+       -------------------------------------------------------- */
+    _drawBucketDividers() {
+        const ctx = this.ctx;
+        const H = CONFIG.BUCKETS.HEIGHT;
+        const bucketY = CONFIG.LOGICAL_HEIGHT - H - CONFIG.BUCKETS.BOTTOM_OFFSET;
+        const peak = 60;
+
+        for (let i = 1; i < Board.bucketZones.length; i++) {
+            const x = Board.bucketZones[i].xStart;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x - 10, bucketY + 6);
+            ctx.lineTo(x, bucketY - peak);
+            ctx.lineTo(x + 10, bucketY + 6);
+            ctx.closePath();
+
+            const grad = ctx.createLinearGradient(x, bucketY - peak, x, bucketY);
+            grad.addColorStop(0, '#fff6d6');
+            grad.addColorStop(0.4, '#ffd76a');
+            grad.addColorStop(1, '#8a5f18');
+
+            ctx.shadowColor = 'rgba(255, 215, 106, 0.55)';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = grad;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255, 246, 214, 0.6)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.restore();
+        }
+    },
+
+    /* --------------------------------------------------------
        _drawBuckets()
        Dessine la rangée de buckets multiplicateurs en bas du
        plateau : cadre néon coloré + gemme dorée + texte, avec
@@ -320,7 +359,9 @@ const Renderer = {
     _drawBuckets() {
         const ctx = this.ctx;
         const H = CONFIG.BUCKETS.HEIGHT;
-        const bucketY = CONFIG.LOGICAL_HEIGHT - H - 200;
+        const bucketY = CONFIG.LOGICAL_HEIGHT - H - CONFIG.BUCKETS.BOTTOM_OFFSET;
+
+        this._drawBucketDividers();
 
         for (const zone of Board.bucketZones) {
             const isJackpot = zone.index === CONFIG.BUCKETS.JACKPOT_INDEX;

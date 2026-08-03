@@ -61,6 +61,7 @@ const CONFIG = {
         ],
         JACKPOT_INDEX: 4,          // index du bucket central (JACKPOT, x20)
         HEIGHT: 140,
+        BOTTOM_OFFSET: 270,        // distance entre le bas du plateau et le haut des buckets
         JACKPOT_PULSE_DURATION: 600 // ms d'animation quand jackpot touché
     },
 

@@ -62,7 +62,7 @@ const Players = {
 
         // Effets (délégués, pas de dépendance circulaire directe)
         const zone = Board.getBucketZone(bucketIndex);
-        const bucketY = CONFIG.LOGICAL_HEIGHT - CONFIG.BUCKETS.HEIGHT - 130;
+        const bucketY = CONFIG.LOGICAL_HEIGHT - CONFIG.BUCKETS.HEIGHT - (CONFIG.BUCKETS.BOTTOM_OFFSET - 70);
         const bucketX = zone ? (zone.xStart + zone.xEnd) / 2 : ball.x;
 
         if (isJackpot) {
