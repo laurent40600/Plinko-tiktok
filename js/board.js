@@ -112,7 +112,7 @@ const Board = {
        l'arrivée d'une bille.
        -------------------------------------------------------- */
     isInBucketZone(y) {
-        const bucketTopY = CONFIG.LOGICAL_HEIGHT - CONFIG.BUCKETS.HEIGHT - 260;
+        const bucketTopY = CONFIG.LOGICAL_HEIGHT - CONFIG.BUCKETS.HEIGHT - (CONFIG.BUCKETS.BOTTOM_OFFSET + 60);
         return y >= bucketTopY;
     },
 
