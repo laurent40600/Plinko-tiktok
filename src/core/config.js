@@ -41,7 +41,7 @@ export const CONFIG = {
         // pour que les picots couvrent bien toute la largeur des buckets).
         MARGIN_X: 100,
         PEG_COLOR: '#ffd76a',
-        PEG_GLOW_COLOR: 'rgba(255,215,106,0.6)'
+        PEG_GLOW_COLOR: 'rgba(255,215,106,0.85)'
     },
 
     BUCKETS: {

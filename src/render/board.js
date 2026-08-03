@@ -10,8 +10,10 @@ import { CONFIG } from '../core/config.js';
 
 export function drawLattice(ctx, board) {
     ctx.save();
-    ctx.strokeStyle = 'rgba(180, 130, 255, 0.18)';
+    ctx.strokeStyle = 'rgba(200, 150, 255, 0.32)';
     ctx.lineWidth = 1.5;
+    ctx.shadowColor = 'rgba(180, 120, 255, 0.5)';
+    ctx.shadowBlur = 3;
     ctx.beginPath();
     for (const line of board.latticeLines) {
         ctx.moveTo(line.x1, line.y1);
@@ -35,7 +37,7 @@ export function drawPegs(ctx, board) {
         ctx.fill();
 
         ctx.shadowColor = B.PEG_GLOW_COLOR;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 20;
 
         const grad = ctx.createRadialGradient(
             peg.x - r * 0.35, peg.y - r * 0.4, r * 0.15,
@@ -49,6 +51,13 @@ export function drawPegs(ctx, board) {
         ctx.beginPath();
         ctx.arc(peg.x, peg.y, r, 0, Math.PI * 2);
         ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Petit éclat brillant (sparkle) pour un effet gemme polie
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(peg.x - r * 0.35, peg.y - r * 0.4, r * 0.22, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
         ctx.fill();
 
         ctx.restore();

@@ -43,8 +43,8 @@ function drawDividers(ctx, board) {
         grad.addColorStop(0.4, '#ffd76a');
         grad.addColorStop(1, '#8a5f18');
 
-        ctx.shadowColor = 'rgba(255, 215, 106, 0.55)';
-        ctx.shadowBlur = 10;
+        ctx.shadowColor = 'rgba(255, 215, 106, 0.8)';
+        ctx.shadowBlur = 18;
         ctx.fillStyle = grad;
         ctx.fill();
         ctx.strokeStyle = 'rgba(255, 246, 214, 0.6)';
@@ -88,7 +88,7 @@ function drawBucketPanel(ctx, zone, h, isJackpot) {
     // Double bordure façon bijou (glow coloré + trait or)
     ctx.save();
     ctx.shadowColor = zone.color;
-    ctx.shadowBlur = isJackpot ? 28 : 14;
+    ctx.shadowBlur = isJackpot ? 40 : 24;
     ctx.lineWidth = 5;
     ctx.strokeStyle = zone.color;
     roundedRectPath(ctx, -w / 2, -h / 2, w, h, 12);

@@ -35,9 +35,23 @@ export function drawBackground(ctx, theme) {
     const dh = img.height * scale;
     ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
 
-    // Voile sombre façon panneau vitré. Un seul calque plein canvas,
-    // masqué par la même découpe que le cadre : jamais de décalage
-    // de bord possible entre les deux (cf. leçon de la v1).
-    ctx.fillStyle = 'rgba(4, 1, 9, 0.72)';
+    // Voile façon panneau vitré (teinté violet, pas noir plat, pour
+    // rester lumineux). Un seul calque plein canvas, masqué par la
+    // même découpe que le cadre : jamais de décalage de bord entre
+    // les deux (cf. leçon de la v1).
+    ctx.fillStyle = 'rgba(10, 3, 22, 0.5)';
     ctx.fillRect(0, 0, W, H);
+
+    // Halo lumineux additif au centre du plateau, façon portail
+    // qui irradie — donne au fond un éclat "premium" au lieu d'un
+    // simple aplat sombre.
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const glow = ctx.createRadialGradient(W / 2, H * 0.28, 20, W / 2, H * 0.28, W * 0.55);
+    glow.addColorStop(0, 'rgba(190, 130, 255, 0.35)');
+    glow.addColorStop(0.5, 'rgba(140, 80, 220, 0.12)');
+    glow.addColorStop(1, 'rgba(140, 80, 220, 0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
 }

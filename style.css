@@ -41,7 +41,10 @@ html, body {
     background: radial-gradient(ellipse at 50% 30%, #2a1245 0%, #0d0518 65%, #05010a 100%);
 }
 
-/* Canvas de jeu occupe tout l'espace logique */
+/* Canvas de jeu occupe tout l'espace logique.
+   Léger boost saturation/contraste/luminosité pour un rendu plus
+   "premium" (couleurs plus vives, glows plus éclatants) sans
+   retoucher chaque dessin individuellement. */
 #game-canvas {
     position: absolute;
     top: 0;
@@ -49,6 +52,7 @@ html, body {
     width: 1080px;
     height: 1920px;
     display: block;
+    filter: saturate(1.25) contrast(1.1) brightness(1.06);
 }
 
 /* Toutes les couches UI se superposent au canvas sans bloquer les clics
