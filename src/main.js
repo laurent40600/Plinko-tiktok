@@ -2,9 +2,9 @@
    ROYAL DROP — main.js
    ------------------------------------------------------------
    Composition root de la nouvelle architecture (v3).
-   Étape 3 : audio (Web Audio API) + particules/textes flottants
-   réagissant aux rebonds et aux atterrissages. L'économie réelle,
-   les joueurs/bots et le HUD complet arrivent à l'étape suivante.
+   Étape 4 : couche sociale/économie (joueurs, bots, classement)
+   + HUD complet + sauvegarde. Le jeu est maintenant fonctionnel
+   de bout en bout, comme la v2, mais sur la nouvelle base.
    ============================================================ */
 
 import { CONFIG } from './core/config.js';
@@ -12,18 +12,28 @@ import { eventBus } from './core/events.js';
 import { initViewport } from './core/viewport.js';
 import { Engine } from './core/engine.js';
 import { Camera } from './core/camera.js';
+import * as Storage from './core/storage.js';
 import { Board } from './entities/board.js';
 import { BallManager } from './entities/ball.js';
 import { Physics } from './systems/physics.js';
 import { AudioEngine } from './systems/audio.js';
 import { ParticleSystem } from './systems/particles.js';
+import { wireGameFeel } from './systems/gameFeel.js';
+import { Players } from './systems/players.js';
+import { Leaderboard } from './systems/leaderboard.js';
+import { Bots } from './systems/bots.js';
 import { RenderPipeline } from './render/pipeline.js';
+import { HUD } from './ui/hud.js';
 
 function boot() {
+    const save = Storage.loadGame();
+    CONFIG.THEMES.CURRENT = save.preferences.theme || CONFIG.THEMES.CURRENT;
+
     const root = document.getElementById('game-root');
     const canvas = document.getElementById('game-canvas');
     initViewport(root);
 
+    // --- Cœur de jeu ---
     const board = new Board();
     board.generate();
 
@@ -33,62 +43,92 @@ function boot() {
     const audio = new AudioEngine();
     const particles = new ParticleSystem();
 
-    const pipeline = new RenderPipeline(canvas, { board, ballManager, camera, particles });
+    if (save.settings.volume !== undefined) {
+        audio.setVolume(save.settings.volume);
+    }
 
+    wireGameFeel({ eventBus, audio, particles, board });
+
+    // --- Couche sociale / économie ---
+    const leaderboard = new Leaderboard({ eventBus, initialEntries: save.leaderboard });
+    const players = new Players({
+        eventBus,
+        ballManager,
+        getEquippedSkin: () => Storage.loadGame().skins.equipped || 'default'
+    });
+    const bots = new Bots(eventBus);
+    if (CONFIG.BOTS.ENABLED) bots.start();
+
+    // --- Rendu + HUD ---
+    const pipeline = new RenderPipeline(canvas, { board, ballManager, camera, particles });
+    const hud = new HUD({
+        eventBus,
+        audio,
+        debugEnabled: save.settings.debugEnabled,
+        onDebugToggle: (enabled) => {
+            const current = Storage.loadGame();
+            current.settings.debugEnabled = enabled;
+            Storage.saveGame(current);
+        }
+    });
+    hud.renderTopGift(leaderboard.getTopEntries());
+    hud.renderRecentDrops(players.getRecentDrops());
+
+    // --- Boucle de jeu ---
     const engine = new Engine(
         (dt) => {
             ballManager.updateAll(dt);
             camera.update(dt);
             particles.update(dt);
+
+            if (hud.debugEnabled) {
+                hud.updateDebugPanel({
+                    fps: engine.currentFps,
+                    ballCount: ballManager.activeCount,
+                    collisions: physics.collisionCountThisFrame,
+                    physTime: physics.lastFrameTimeMs
+                });
+            }
         },
-        () => pipeline.drawScene()
+        () => pipeline.drawScene(hud.debugEnabled ? hud.debugFlags : {})
     );
     engine.start();
 
-    wireGameFeel({ eventBus, audio, particles, board });
-
-    // Bouton LANCER temporaire : lance une bille de test et débloque
-    // l'audio (obligatoire sur iOS/Safari, doit suivre une interaction).
-    // Sera remplacé à l'étape suivante par le vrai flux économie/UI.
-    document.getElementById('launch-btn')?.addEventListener('click', () => {
-        audio.init();
-        audio.unlock();
-        audio.playLaunch();
-        ballManager.spawn({ betAmount: CONFIG.ECONOMY.LAUNCH_COST, source: 'local' });
-    });
+    setupAutosave({ leaderboard, audio, hud });
+    registerServiceWorker();
 
     document.getElementById('loading-screen')?.remove();
 
-    console.log('%c ROYAL DROP v3 — étape 3 : audio + particules ', 'background:#ffd76a;color:#1a0a2e;font-weight:bold;');
+    console.log('%c ROYAL DROP v3 — étape 4 : social/économie + HUD ', 'background:#ffd76a;color:#1a0a2e;font-weight:bold;');
+    console.log('%c ROYAL DROP v3 — prêt ! ', 'background:#2fbf5a;color:#fff;font-weight:bold;');
 }
 
-/**
- * Branche les réactions sonores/visuelles sur les événements de jeu.
- * Reste volontairement simple ici (composition root) : la vraie
- * couche joueurs/historique (qui écoute aussi ces événements)
- * arrive à l'étape suivante.
- */
-function wireGameFeel({ eventBus, audio, particles, board }) {
-    eventBus.on('physics:pegHit', ({ intensity }) => {
-        audio.playPegHit(intensity);
+function setupAutosave({ leaderboard, audio, hud }) {
+    const persist = () => {
+        const previous = Storage.loadGame();
+        Storage.saveGame({
+            ...previous,
+            leaderboard: leaderboard.getFullLeaderboard(),
+            preferences: { ...previous.preferences, theme: CONFIG.THEMES.CURRENT },
+            settings: {
+                volume: audio.masterGain ? audio.masterGain.gain.value : CONFIG.AUDIO.MASTER_VOLUME,
+                debugEnabled: hud.debugEnabled
+            }
+        });
+    };
+
+    setInterval(persist, CONFIG.STORAGE.AUTOSAVE_INTERVAL);
+    window.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') persist();
     });
+}
 
-    eventBus.on('ball:landed', ({ ball, bucketIndex, multiplier, winAmount, isJackpot }) => {
-        const zone = board.getBucketZone(bucketIndex);
-        const bucketY = CONFIG.LOGICAL_HEIGHT - CONFIG.BUCKETS.HEIGHT - (CONFIG.BUCKETS.BOTTOM_OFFSET - 70);
-        const bucketX = zone ? (zone.xStart + zone.xEnd) / 2 : ball.x;
-
-        if (isJackpot) {
-            audio.playJackpot();
-            particles.burst(bucketX, bucketY, CONFIG.PARTICLES.BURST_COUNT_ON_JACKPOT, '#ffd76a');
-            particles.spawnFloatingText(bucketX, bucketY, `JACKPOT! +${winAmount}`, '#ffd76a', 48);
-        } else {
-            audio.playBucketWin(multiplier);
-            particles.burst(bucketX, bucketY, CONFIG.PARTICLES.BURST_COUNT_ON_BUCKET, zone?.color || '#fff');
-            particles.spawnFloatingText(bucketX, bucketY, `+${winAmount}`, '#ffffff', 34);
-        }
-
-        console.log(`[Test] Bille atterrie — bucket ${bucketIndex}, x${multiplier}, gain ${winAmount}${isJackpot ? ' (JACKPOT!)' : ''}`);
+function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+            .then((reg) => console.log('[Game] Service Worker enregistré :', reg.scope))
+            .catch((err) => console.warn('[Game] Échec Service Worker :', err));
     });
 }
 
