@@ -99,26 +99,14 @@
 </div>
 
 <!-- ============================================================
-     CHARGEMENT DES MODULES JS
-     Ordre important : config avant tout le reste.
-     game.js orchestre l'initialisation complète en dernier.
+     RECONSTRUCTION EN COURS (archi v3, src/) — voir README.
+     Les anciens modules js/*.js restent sur le disque (non
+     chargés) jusqu'à ce que la nouvelle base ait atteint la
+     parité fonctionnelle ; ils seront supprimés à la toute
+     dernière étape. Pour revenir en arrière : recommenter ce
+     bloc et décommenter l'ancien.
      ============================================================ -->
-<script src="js/config.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/events.js"></script>
-<script src="js/audio.js"></script>
-<script src="js/particles.js"></script>
-<script src="js/camera.js"></script>
-<script src="js/physics.js"></script>
-<script src="js/ball.js"></script>
-<script src="js/board.js"></script>
-<script src="js/renderer.js"></script>
-<script src="js/players.js"></script>
-<script src="js/leaderboard.js"></script>
-<script src="js/bots.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/engine.js"></script>
-<script src="js/game.js"></script>
+<script type="module" src="src/main.js"></script>
 
 </body>
 </html>
