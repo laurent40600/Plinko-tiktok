@@ -75,8 +75,11 @@ const Renderer = {
                 const dh = img.height * scale;
                 ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
 
-                // Voile sombre léger pour garder les picots/billes lisibles
-                ctx.fillStyle = 'rgba(5, 1, 10, 0.35)';
+                // Voile sombre pour un fond façon panneau vitré, cohérent
+                // avec le cadre (pas de rectangle séparé : ce voile plein
+                // canvas est masqué par le cadre exactement comme le fond,
+                // donc aucun décalage de bord possible entre les deux).
+                ctx.fillStyle = 'rgba(4, 1, 9, 0.72)';
                 ctx.fillRect(0, 0, W, H);
             }
         }
@@ -120,7 +123,6 @@ const Renderer = {
 
         Camera.applyTransform(ctx);
 
-        this._drawPlayPanel();
         this._drawLattice();
         this._drawPegs();
         this._drawBallTrails(debugFlags.trajectory);
@@ -134,26 +136,6 @@ const Renderer = {
         this._drawBuckets();
 
         this._drawFrame();
-    },
-
-    /* --------------------------------------------------------
-       _drawPlayPanel()
-       Dessine le panneau vitré sombre sur lequel reposent les
-       picots et les buckets, à l'intérieur des rails néon du
-       cadre (au lieu de laisser voir le fond directement).
-       -------------------------------------------------------- */
-    _drawPlayPanel() {
-        const ctx = this.ctx;
-        const x = 95, y = 335, w = 890, h = 1450;
-
-        const panel = ctx.createLinearGradient(0, y, 0, y + h);
-        panel.addColorStop(0, 'rgba(18, 8, 30, 0.88)');
-        panel.addColorStop(0.5, 'rgba(8, 3, 14, 0.92)');
-        panel.addColorStop(1, 'rgba(18, 8, 30, 0.88)');
-
-        this._roundedRectPath(ctx, x, y, w, h, 34);
-        ctx.fillStyle = panel;
-        ctx.fill();
     },
 
     /* --------------------------------------------------------
