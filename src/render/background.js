@@ -35,22 +35,20 @@ export function drawBackground(ctx, theme) {
     const dh = img.height * scale;
     ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
 
-    // Voile façon panneau vitré (teinté violet, pas noir plat, pour
-    // rester lumineux). Un seul calque plein canvas, masqué par la
-    // même découpe que le cadre : jamais de décalage de bord entre
-    // les deux (cf. leçon de la v1).
-    ctx.fillStyle = 'rgba(10, 3, 22, 0.5)';
+    // Voile façon panneau capitonné sombre — la référence est un
+    // cuir/velours quasi noir avec une légère dominante prune, PAS
+    // un panneau violet lumineux (l'éclat vient des picots dorés et
+    // des rails néon du cadre, pas d'un fond éclairé).
+    ctx.fillStyle = 'rgba(22, 13, 20, 0.86)';
     ctx.fillRect(0, 0, W, H);
 
-    // Halo lumineux additif au centre du plateau, façon portail
-    // qui irradie — donne au fond un éclat "premium" au lieu d'un
-    // simple aplat sombre.
+    // Très léger halo au centre-haut, juste assez pour suggérer une
+    // source de lumière derrière l'arche, sans éclaircir tout le panneau.
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    const glow = ctx.createRadialGradient(W / 2, H * 0.28, 20, W / 2, H * 0.28, W * 0.55);
-    glow.addColorStop(0, 'rgba(230, 110, 245, 0.4)');
-    glow.addColorStop(0.5, 'rgba(190, 60, 220, 0.14)');
-    glow.addColorStop(1, 'rgba(190, 60, 220, 0)');
+    const glow = ctx.createRadialGradient(W / 2, H * 0.22, 10, W / 2, H * 0.22, W * 0.3);
+    glow.addColorStop(0, 'rgba(180, 90, 190, 0.18)');
+    glow.addColorStop(1, 'rgba(180, 90, 190, 0)');
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, W, H);
     ctx.restore();
