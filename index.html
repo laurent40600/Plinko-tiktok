@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>ROYAL DROP - Plinko Premium</title>
+
+<!-- ===================== PWA ===================== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a0a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RoyalDrop">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     CONTENEUR PRINCIPAL
+     Toute l'interface est calculée dans un espace logique fixe
+     de 1080x1920. Le scaling est purement visuel (transform:scale)
+     et ne modifie jamais les coordonnées physiques réelles.
+     ============================================================ -->
+<div id="game-root">
+
+    <!-- Canvas principal du jeu (plateau, billes, particules) -->
+    <canvas id="game-canvas" width="1080" height="1920"></canvas>
+
+    <!-- ===================== HEADER (streamer info) ===================== -->
+    <div id="ui-header" class="ui-layer">
+        <div id="streamer-info">
+            <img id="streamer-avatar" src="assets/icons/avatar-placeholder.png" alt="avatar">
+            <div id="streamer-text">
+                <span id="streamer-name">LeBoss</span>
+                <span id="streamer-likes">♥ 99.9K</span>
+            </div>
+            <button id="follow-btn">+ Suivre</button>
+        </div>
+        <div id="header-right">
+            <div id="viewer-avatars"></div>
+            <span id="viewer-count">👤 4.8K</span>
+            <button id="close-btn">✕</button>
+        </div>
+    </div>
+
+    <!-- ===================== BADGE TOP 1 + EXPLORER ===================== -->
+    <div id="ui-subheader" class="ui-layer">
+        <span id="top-badge">🔥 Top 1 hebdo</span>
+        <span id="explore-badge">🌐 Explorer ›</span>
+    </div>
+
+    <!-- ===================== LOGO PLINKO ===================== -->
+    <div id="ui-logo" class="ui-layer">
+        <img id="logo-crown" src="assets/icons/crown.png" alt="couronne">
+        <h1 id="logo-title">PLINKO</h1>
+    </div>
+
+    <!-- ===================== TOP GIFT (panneau gauche haut) ===================== -->
+    <div id="ui-topgift" class="ui-layer ui-panel">
+        <h2>TOP GIFT</h2>
+        <ul id="topgift-list"><!-- rempli dynamiquement par leaderboard.js --></ul>
+    </div>
+
+    <!-- ===================== DERNIERS LANCERS (panneau gauche bas) ===================== -->
+    <div id="ui-lastdrops" class="ui-layer ui-panel">
+        <h2>DERNIERS LANCERS</h2>
+        <ul id="lastdrops-list"><!-- rempli dynamiquement par players.js --></ul>
+    </div>
+
+    <!-- ===================== ZONE MULTIPLICATEURS (buckets) ===================== -->
+    <div id="ui-buckets" class="ui-layer">
+        <!-- Générés dynamiquement par board.js selon config.js -->
+    </div>
+
+    <!-- ===================== BOUTON LANCER ===================== -->
+    <div id="ui-launch" class="ui-layer">
+        <button id="launch-btn">
+            <span id="launch-label">LANCER</span>
+            <span id="launch-cost">💎 <span id="launch-cost-value">100</span></span>
+        </button>
+    </div>
+
+    <!-- ===================== MENU DEBUG (caché par défaut, touche D) ===================== -->
+    <div id="ui-debug" class="ui-layer hidden">
+        <div id="debug-content">
+            <p>FPS: <span id="dbg-fps">0</span></p>
+            <p>Billes actives: <span id="dbg-balls">0</span></p>
+            <p>Gravité: <span id="dbg-gravity">0</span></p>
+            <p>Collisions/frame: <span id="dbg-collisions">0</span></p>
+            <p>Temps physique: <span id="dbg-phystime">0</span>ms</p>
+            <label><input type="checkbox" id="dbg-hitbox"> Hitbox</label>
+            <label><input type="checkbox" id="dbg-vectors"> Vecteurs</label>
+            <label><input type="checkbox" id="dbg-trajectory"> Trajectoires</label>
+        </div>
+    </div>
+
+    <!-- ===================== ÉCRAN DE CHARGEMENT ===================== -->
+    <div id="loading-screen">
+        <div id="loading-crown">👑</div>
+        <p>Chargement de ROYAL DROP...</p>
+    </div>
+
+</div>
+
+<!-- ============================================================
+     CHARGEMENT DES MODULES JS
+     Ordre important : config avant tout le reste.
+     game.js orchestre l'initialisation complète en dernier.
+     ============================================================ -->
+<script src="js/config.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/events.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/camera.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/ball.js"></script>
+<script src="js/board.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/players.js"></script>
+<script src="js/leaderboard.js"></script>
+<script src="js/bots.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/game.js"></script>
+
+</body>
+</html>

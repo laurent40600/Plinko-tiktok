@@ -1,0 +1,354 @@
+/* ============================================================
+   ROYAL DROP — style.css
+   Thème "Royal" : violet profond + or premium.
+   Toute la mise en page est calculée dans un espace logique
+   fixe de 1080x1920. L'adaptation à l'écran réel se fait
+   UNIQUEMENT via transform:scale() sur #game-root.
+   Les coordonnées internes ne changent jamais.
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #05010a;
+    overflow: hidden;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    touch-action: none;
+}
+
+/* ============================================================
+   CONTENEUR RACINE — espace logique fixe 1080x1920
+   Centré et mis à l'échelle via JS (camera.js / engine.js)
+   grâce à une variable CSS --scale mise à jour au resize.
+   ============================================================ */
+#game-root {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1080px;
+    height: 1920px;
+    transform: translate(-50%, -50%) scale(var(--scale, 1));
+    transform-origin: center center;
+    background: radial-gradient(ellipse at 50% 30%, #2a1245 0%, #0d0518 65%, #05010a 100%);
+}
+
+/* Canvas de jeu occupe tout l'espace logique */
+#game-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1080px;
+    height: 1920px;
+    display: block;
+}
+
+/* Toutes les couches UI se superposent au canvas sans bloquer les clics
+   sauf sur leurs éléments interactifs propres */
+.ui-layer {
+    position: absolute;
+    pointer-events: none;
+}
+.ui-layer button,
+.ui-layer input {
+    pointer-events: auto;
+}
+
+/* ============================================================
+   HEADER — streamer info + viewers
+   ============================================================ */
+#ui-header {
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#streamer-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    pointer-events: auto;
+}
+
+#streamer-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #ff2d78;
+    object-fit: cover;
+    background: #333;
+}
+
+#streamer-text {
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+#streamer-name {
+    font-weight: 700;
+    font-size: 26px;
+}
+#streamer-likes {
+    font-size: 18px;
+    color: #cfcfcf;
+}
+
+#follow-btn {
+    background: linear-gradient(135deg, #ff2d78, #ff5a8a);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 26px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255,45,120,0.5);
+}
+
+#header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #fff;
+    font-size: 20px;
+    pointer-events: auto;
+}
+#viewer-avatars {
+    display: flex;
+}
+#close-btn {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: none;
+    font-size: 26px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* ============================================================
+   SUBHEADER — badges Top 1 / Explorer
+   ============================================================ */
+#ui-subheader {
+    top: 100px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    color: #ffd76a;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* ============================================================
+   LOGO — couronne + titre PLINKO
+   ============================================================ */
+#ui-logo {
+    top: 130px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#logo-crown {
+    width: 90px;
+    filter: drop-shadow(0 0 20px gold);
+}
+#logo-title {
+    font-size: 90px;
+    font-weight: 900;
+    letter-spacing: 8px;
+    background: linear-gradient(180deg, #fff6d0 0%, #ffd76a 40%, #b8860b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+}
+
+/* ============================================================
+   PANNEAUX LATÉRAUX (Top Gift / Derniers Lancers)
+   ============================================================ */
+.ui-panel {
+    width: 260px;
+    background: rgba(20, 8, 35, 0.75);
+    border: 1px solid rgba(255, 215, 106, 0.3);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(6px);
+    pointer-events: auto;
+}
+.ui-panel h2 {
+    color: #ffd76a;
+    font-size: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+.ui-panel ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.ui-panel li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    font-size: 18px;
+}
+.ui-panel li img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+#ui-topgift {
+    top: 300px;
+    left: 20px;
+}
+
+#ui-lastdrops {
+    top: 620px;
+    left: 20px;
+}
+
+/* ============================================================
+   BUCKETS — rangée de multiplicateurs en bas du plateau
+   ============================================================ */
+#ui-buckets {
+    bottom: 260px;
+    left: 250px;
+    right: 40px;
+    height: 140px;
+    display: flex;
+    gap: 6px;
+    pointer-events: none;
+}
+.bucket {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 26px;
+    border-radius: 8px;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+/* ============================================================
+   BOUTON LANCER
+   ============================================================ */
+#ui-launch {
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+}
+#launch-btn {
+    pointer-events: auto;
+    background: linear-gradient(135deg, #3a1a5c, #1a0a2e);
+    border: 3px solid #ffd76a;
+    border-radius: 40px;
+    padding: 20px 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255, 215, 106, 0.4);
+}
+#launch-label {
+    color: #ffd76a;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 3px;
+}
+#launch-cost {
+    color: #fff;
+    font-size: 22px;
+}
+
+/* ============================================================
+   MENU DEBUG
+   ============================================================ */
+#ui-debug {
+    top: 200px;
+    right: 20px;
+    width: 300px;
+    background: rgba(0,0,0,0.85);
+    border: 1px solid #0f0;
+    border-radius: 10px;
+    padding: 16px;
+    color: #0f0;
+    font-family: monospace;
+    font-size: 16px;
+    pointer-events: auto;
+    z-index: 999;
+}
+#ui-debug.hidden {
+    display: none;
+}
+#ui-debug p {
+    margin-bottom: 6px;
+}
+#ui-debug label {
+    display: block;
+    margin-top: 6px;
+}
+
+/* ============================================================
+   ÉCRAN DE CHARGEMENT
+   ============================================================ */
+#loading-screen {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #05010a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffd76a;
+    z-index: 9999;
+    transition: opacity 0.6s ease;
+}
+#loading-crown {
+    font-size: 80px;
+    animation: pulse-crown 1.2s infinite ease-in-out;
+}
+#loading-screen p {
+    margin-top: 20px;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+@keyframes pulse-crown {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.7; }
+}
+#loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ============================================================
+   UTILITAIRES
+   ============================================================ */
+.hidden {
+    display: none !important;
+}
