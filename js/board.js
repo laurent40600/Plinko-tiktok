@@ -11,6 +11,7 @@ const Board = {
 
     pegs: [],
     bucketZones: [], // { index, xStart, xEnd, value, color }
+    latticeLines: [], // [{x1,y1,x2,y2}, ...] — liaisons diagonales décoratives entre picots
 
     /* --------------------------------------------------------
        init()
@@ -20,6 +21,7 @@ const Board = {
     init() {
         this.pegs = this.generatePegs();
         this.bucketZones = this._generateBucketZones();
+        this.latticeLines = this._generateLatticeLines();
     },
 
     /* --------------------------------------------------------
@@ -50,6 +52,30 @@ const Board = {
         }
 
         return pegs;
+    },
+
+    /* --------------------------------------------------------
+       _generateLatticeLines()
+       Précalcule les segments décoratifs reliant chaque picot à
+       ses voisins diagonaux de la rangée suivante (motif en
+       losanges visible en fond du plateau de référence).
+       -------------------------------------------------------- */
+    _generateLatticeLines() {
+        const B = CONFIG.BOARD;
+        const maxDx = B.PEG_SPACING_X * 0.6;
+        const maxDy = B.PEG_SPACING_Y * 1.15;
+        const lines = [];
+
+        for (const a of this.pegs) {
+            for (const b of this.pegs) {
+                const dy = b.y - a.y;
+                if (dy <= 0 || dy > maxDy) continue;
+                const dx = Math.abs(b.x - a.x);
+                if (dx > maxDx) continue;
+                lines.push({ x1: a.x, y1: a.y, x2: b.x, y2: b.y });
+            }
+        }
+        return lines;
     },
 
     /* --------------------------------------------------------

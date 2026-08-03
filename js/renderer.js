@@ -120,6 +120,8 @@ const Renderer = {
 
         Camera.applyTransform(ctx);
 
+        this._drawPlayPanel();
+        this._drawLattice();
         this._drawPegs();
         this._drawBallTrails(debugFlags.trajectory);
         this._drawBalls(debugFlags.hitbox, debugFlags.vectors);
@@ -135,21 +137,84 @@ const Renderer = {
     },
 
     /* --------------------------------------------------------
+       _drawPlayPanel()
+       Dessine le panneau vitré sombre sur lequel reposent les
+       picots et les buckets, à l'intérieur des rails néon du
+       cadre (au lieu de laisser voir le fond directement).
+       -------------------------------------------------------- */
+    _drawPlayPanel() {
+        const ctx = this.ctx;
+        const x = 95, y = 335, w = 890, h = 1450;
+
+        const panel = ctx.createLinearGradient(0, y, 0, y + h);
+        panel.addColorStop(0, 'rgba(18, 8, 30, 0.88)');
+        panel.addColorStop(0.5, 'rgba(8, 3, 14, 0.92)');
+        panel.addColorStop(1, 'rgba(18, 8, 30, 0.88)');
+
+        this._roundedRectPath(ctx, x, y, w, h, 34);
+        ctx.fillStyle = panel;
+        ctx.fill();
+    },
+
+    /* --------------------------------------------------------
+       _drawLattice()
+       Dessine le maillage décoratif en losanges reliant les
+       picots voisins, en fond (sous les picots), comme sur le
+       plateau de référence.
+       -------------------------------------------------------- */
+    _drawLattice() {
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(180, 130, 255, 0.18)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (const line of Board.latticeLines) {
+            ctx.moveTo(line.x1, line.y1);
+            ctx.lineTo(line.x2, line.y2);
+        }
+        ctx.stroke();
+        ctx.restore();
+    },
+
+    /* --------------------------------------------------------
        _drawPegs()
-       Dessine tous les picots du plateau avec un léger glow doré.
+       Dessine tous les picots du plateau en petites billes
+       dorées 3D (dégradé + ombre portée), façon plateau de
+       référence, avec un léger glow doré.
        -------------------------------------------------------- */
     _drawPegs() {
         const ctx = this.ctx;
         const B = CONFIG.BOARD;
+        const r = B.PEG_RADIUS;
 
         for (const peg of Board.pegs) {
             ctx.save();
+
+            // Ombre portée (donne l'impression que le picot dépasse du panneau)
+            ctx.beginPath();
+            ctx.ellipse(peg.x + 2, peg.y + 3, r * 0.95, r * 0.7, 0, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.fill();
+
+            // Halo doré
             ctx.shadowColor = B.PEG_GLOW_COLOR;
             ctx.shadowBlur = 10;
-            ctx.fillStyle = B.PEG_COLOR;
+
+            // Corps de la bille : dégradé radial façon métal poli
+            const grad = ctx.createRadialGradient(
+                peg.x - r * 0.35, peg.y - r * 0.4, r * 0.15,
+                peg.x, peg.y, r
+            );
+            grad.addColorStop(0, '#fff6d6');
+            grad.addColorStop(0.35, '#ffd76a');
+            grad.addColorStop(0.75, '#c9932f');
+            grad.addColorStop(1, '#8a5f18');
+
             ctx.beginPath();
-            ctx.arc(peg.x, peg.y, B.PEG_RADIUS, 0, Math.PI * 2);
+            ctx.arc(peg.x, peg.y, r, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
             ctx.fill();
+
             ctx.restore();
         }
     },
