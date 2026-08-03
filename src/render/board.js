@@ -10,9 +10,9 @@ import { CONFIG } from '../core/config.js';
 
 export function drawLattice(ctx, board) {
     ctx.save();
-    ctx.strokeStyle = 'rgba(200, 150, 255, 0.32)';
+    ctx.strokeStyle = 'rgba(230, 110, 245, 0.35)';
     ctx.lineWidth = 1.5;
-    ctx.shadowColor = 'rgba(180, 120, 255, 0.5)';
+    ctx.shadowColor = 'rgba(220, 90, 240, 0.55)';
     ctx.shadowBlur = 3;
     ctx.beginPath();
     for (const line of board.latticeLines) {
@@ -43,10 +43,10 @@ export function drawPegs(ctx, board) {
             peg.x - r * 0.35, peg.y - r * 0.4, r * 0.15,
             peg.x, peg.y, r
         );
-        grad.addColorStop(0, '#fff6d6');
-        grad.addColorStop(0.35, '#ffd76a');
-        grad.addColorStop(0.75, '#c9932f');
-        grad.addColorStop(1, '#8a5f18');
+        grad.addColorStop(0, '#fff3d0');
+        grad.addColorStop(0.3, '#ffb347');
+        grad.addColorStop(0.7, '#e07a12');
+        grad.addColorStop(1, '#7a3d05');
 
         ctx.beginPath();
         ctx.arc(peg.x, peg.y, r, 0, Math.PI * 2);

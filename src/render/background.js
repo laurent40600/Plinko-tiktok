@@ -48,9 +48,9 @@ export function drawBackground(ctx, theme) {
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
     const glow = ctx.createRadialGradient(W / 2, H * 0.28, 20, W / 2, H * 0.28, W * 0.55);
-    glow.addColorStop(0, 'rgba(190, 130, 255, 0.35)');
-    glow.addColorStop(0.5, 'rgba(140, 80, 220, 0.12)');
-    glow.addColorStop(1, 'rgba(140, 80, 220, 0)');
+    glow.addColorStop(0, 'rgba(230, 110, 245, 0.4)');
+    glow.addColorStop(0.5, 'rgba(190, 60, 220, 0.14)');
+    glow.addColorStop(1, 'rgba(190, 60, 220, 0)');
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, W, H);
     ctx.restore();

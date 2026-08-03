@@ -40,15 +40,15 @@ export const CONFIG = {
         // les murs (physics.js) ET les buckets (mêmes bornes horizontales,
         // pour que les picots couvrent bien toute la largeur des buckets).
         MARGIN_X: 100,
-        PEG_COLOR: '#ffd76a',
-        PEG_GLOW_COLOR: 'rgba(255,215,106,0.85)'
+        PEG_COLOR: '#ffb347',
+        PEG_GLOW_COLOR: 'rgba(255,179,71,0.9)'
     },
 
     BUCKETS: {
         VALUES: [0.5, 1, 2, 3, 20, 3, 2, 1, 0.5],
         COLORS: [
-            '#8a3fd1', '#2f6fe0', '#2fbf5a', '#2fbf5a',
-            '#ffd76a', '#2fbf5a', '#2fbf5a', '#2f6fe0', '#8a3fd1'
+            '#b81fe0', '#2f8fe8', '#2fd66a', '#2fd66a',
+            '#ffd76a', '#2fd66a', '#2fd66a', '#2f8fe8', '#b81fe0'
         ],
         JACKPOT_INDEX: 4,
         HEIGHT: 140,
