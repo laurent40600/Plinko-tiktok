@@ -11,7 +11,7 @@
    les utilisateurs déjà installés.
    ============================================================ */
 
-const CACHE_VERSION = 'royal-drop-v2.5.0';
+const CACHE_VERSION = 'royal-drop-v2.6.0';
 const CACHE_NAME = `royal-drop-cache-${CACHE_VERSION}`;
 
 // Liste de tous les fichiers essentiels au fonctionnement hors ligne
