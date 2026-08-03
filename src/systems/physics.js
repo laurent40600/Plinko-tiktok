@@ -73,7 +73,7 @@ export class Physics {
     }
 
     _resolveWallCollisions(ball) {
-        const margin = CONFIG.BOARD.BOARD_MARGIN_X * 0.4;
+        const margin = CONFIG.BOARD.MARGIN_X;
         const leftWall = margin;
         const rightWall = CONFIG.LOGICAL_WIDTH - margin;
 

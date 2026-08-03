@@ -16,11 +16,13 @@ export class Players {
      * @param {object} deps
      * @param {import('../core/events.js').eventBus} deps.eventBus
      * @param {import('../entities/ball.js').BallManager} deps.ballManager
+     * @param {import('./audio.js').AudioEngine} deps.audio
      * @param {() => string} deps.getEquippedSkin
      */
-    constructor({ eventBus, ballManager, getEquippedSkin }) {
+    constructor({ eventBus, ballManager, audio, getEquippedSkin }) {
         this.eventBus = eventBus;
         this.ballManager = ballManager;
+        this.audio = audio;
         this.getEquippedSkin = getEquippedSkin;
         this.recentDrops = [];
 
@@ -28,6 +30,7 @@ export class Players {
         eventBus.on('ball:landed', (data) => this._onBallLanded(data));
     }
 
+    /** Point d'entrée unique pour tout lancer : cadeau spectateur (à venir), bot, ou test. */
     _onSpawnRequest(data) {
         this.ballManager.spawn({
             playerName: data.playerName || 'Joueur',
@@ -36,6 +39,8 @@ export class Players {
             source: data.source || 'local',
             skin: this.getEquippedSkin()
         });
+
+        this.audio.playLaunch();
     }
 
     _onBallLanded({ ball, winAmount, multiplier, isJackpot }) {

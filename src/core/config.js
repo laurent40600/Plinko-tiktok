@@ -36,7 +36,10 @@ export const CONFIG = {
         PEG_SPACING_X: 78,
         PEG_SPACING_Y: 95,
         BOARD_TOP_Y: 380,
-        BOARD_MARGIN_X: 250,
+        // Marge gauche/droite du terrain de jeu — partagée par les picots,
+        // les murs (physics.js) ET les buckets (mêmes bornes horizontales,
+        // pour que les picots couvrent bien toute la largeur des buckets).
+        MARGIN_X: 100,
         PEG_COLOR: '#ffd76a',
         PEG_GLOW_COLOR: 'rgba(255,215,106,0.6)'
     },

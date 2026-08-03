@@ -2,9 +2,11 @@
    ROYAL DROP — ui/hud.js
    ------------------------------------------------------------
    Toute l'interface HTML superposée au canvas : panneaux (Top
-   Gift, Derniers Lancers), bouton Lancer, menu debug (touche D).
-   Ne contient aucune logique de jeu : lit l'état fourni par les
-   autres modules et met à jour le DOM.
+   Gift, Derniers Lancers), menu debug (touche D). Il n'y a plus
+   de bouton de lancer manuel : les billes sont déclenchées par
+   les cadeaux des spectateurs (TikTokBridge) et par les bots
+   (voir systems/bots.js) — ce module ne fait que refléter l'état
+   du jeu, il ne déclenche plus jamais de lancer lui-même.
    ============================================================ */
 
 import { CONFIG } from '../core/config.js';
@@ -31,13 +33,10 @@ export class HUD {
         this._bindGameEvents();
 
         this.els.debugPanel?.classList.toggle('hidden', !this.debugEnabled);
-        this.updateLaunchCost(CONFIG.ECONOMY.LAUNCH_COST);
     }
 
     _cacheElements() {
         this.els = {
-            launchBtn: document.getElementById('launch-btn'),
-            launchCostValue: document.getElementById('launch-cost-value'),
             topGiftList: document.getElementById('topgift-list'),
             lastDropsList: document.getElementById('lastdrops-list'),
             closeBtn: document.getElementById('close-btn'),
@@ -56,7 +55,6 @@ export class HUD {
     }
 
     _bindUIEvents() {
-        this.els.launchBtn?.addEventListener('click', () => this._onLaunchClick());
         this.els.closeBtn?.addEventListener('click', () => this._onCloseClick());
         this.els.followBtn?.addEventListener('click', () => this.audio.playUIClick());
 
@@ -74,21 +72,6 @@ export class HUD {
     _bindGameEvents() {
         this.eventBus.on('leaderboard:updated', (entries) => this.renderTopGift(entries));
         this.eventBus.on('players:dropRegistered', (drops) => this.renderRecentDrops(drops));
-        this.eventBus.on('game:jackpotWon', () => this._flashJackpotUI());
-    }
-
-    _onLaunchClick() {
-        this.audio.init();
-        this.audio.unlock();
-        this.audio.playUIClick();
-        this.audio.playLaunch();
-
-        this.eventBus.emit('game:spawnBall', {
-            playerName: 'Vous',
-            avatar: null,
-            betAmount: CONFIG.ECONOMY.LAUNCH_COST,
-            source: 'local'
-        });
     }
 
     _onCloseClick() {
@@ -119,18 +102,6 @@ export class HUD {
             li.innerHTML = `<span>${drop.playerName}<br><small>${secondsAgo}s</small></span><span style="color:${drop.isJackpot ? '#ffd76a' : '#fff'}">${drop.amount}</span>`;
             list.appendChild(li);
         });
-    }
-
-    updateLaunchCost(value) {
-        if (this.els.launchCostValue) this.els.launchCostValue.textContent = value;
-    }
-
-    _flashJackpotUI() {
-        const btn = this.els.launchBtn;
-        if (!btn) return;
-        btn.style.transition = 'box-shadow 0.2s ease';
-        btn.style.boxShadow = '0 0 60px 20px rgba(255,215,106,0.9)';
-        setTimeout(() => { btn.style.boxShadow = ''; }, CONFIG.BUCKETS.JACKPOT_PULSE_DURATION);
     }
 
     toggleDebug() {

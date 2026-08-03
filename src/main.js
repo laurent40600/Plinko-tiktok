@@ -54,6 +54,7 @@ function boot() {
     const players = new Players({
         eventBus,
         ballManager,
+        audio,
         getEquippedSkin: () => Storage.loadGame().skins.equipped || 'default'
     });
     const bots = new Bots(eventBus);
@@ -96,11 +97,25 @@ function boot() {
 
     setupAutosave({ leaderboard, audio, hud });
     registerServiceWorker();
+    unlockAudioOnFirstInteraction(audio);
 
     document.getElementById('loading-screen')?.remove();
 
     console.log('%c ROYAL DROP v3 — étape 4 : social/économie + HUD ', 'background:#ffd76a;color:#1a0a2e;font-weight:bold;');
     console.log('%c ROYAL DROP v3 — prêt ! ', 'background:#2fbf5a;color:#fff;font-weight:bold;');
+}
+
+/**
+ * L'audio (Web Audio API) doit être initialisé/débloqué après une
+ * interaction utilisateur (obligatoire sur iOS/Safari). Sans bouton
+ * LANCER, on écoute le tout premier tap/clic sur la page pour ça.
+ */
+function unlockAudioOnFirstInteraction(audio) {
+    const unlock = () => {
+        audio.init();
+        audio.unlock();
+    };
+    document.addEventListener('pointerdown', unlock, { once: true });
 }
 
 function setupAutosave({ leaderboard, audio, hud }) {

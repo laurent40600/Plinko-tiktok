@@ -226,40 +226,6 @@ html, body {
 }
 
 /* ============================================================
-   BOUTON LANCER
-   ============================================================ */
-#ui-launch {
-    bottom: 60px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-}
-#launch-btn {
-    pointer-events: auto;
-    background: linear-gradient(135deg, #3a1a5c, #1a0a2e);
-    border: 3px solid #ffd76a;
-    border-radius: 40px;
-    padding: 20px 70px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    box-shadow: 0 0 30px rgba(255, 215, 106, 0.4);
-}
-#launch-label {
-    color: #ffd76a;
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: 3px;
-}
-#launch-cost {
-    color: #fff;
-    font-size: 22px;
-}
-
-/* ============================================================
    MENU DEBUG
    ============================================================ */
 #ui-debug {

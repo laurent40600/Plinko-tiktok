@@ -24,7 +24,7 @@ export class Board {
         const B = CONFIG.BOARD;
         const pegs = [];
 
-        const playWidth = CONFIG.LOGICAL_WIDTH - (B.BOARD_MARGIN_X * 2);
+        const playWidth = CONFIG.LOGICAL_WIDTH - (B.MARGIN_X * 2);
         const pegsPerRow = Math.floor(playWidth / B.PEG_SPACING_X);
 
         for (let row = 0; row < B.ROWS; row++) {
@@ -67,7 +67,7 @@ export class Board {
         const colors = CONFIG.BUCKETS.COLORS;
         const count = values.length;
 
-        const marginX = CONFIG.BOARD.BOARD_MARGIN_X * 0.4;
+        const marginX = CONFIG.BOARD.MARGIN_X;
         const usableWidth = CONFIG.LOGICAL_WIDTH - (marginX * 2);
         const zoneWidth = usableWidth / count;
 
