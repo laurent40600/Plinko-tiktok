@@ -266,62 +266,88 @@ const Renderer = {
             ctx.translate(zone.xStart + width / 2, bucketY + h / 2);
             ctx.scale(pulseScale, pulseScale);
 
-            // --- Fond façon verre teinté ---
+            // --- Fond façon verre teinté (dégradé + halo central) ---
             const glass = ctx.createLinearGradient(0, -h / 2, 0, h / 2);
-            glass.addColorStop(0, `${zone.color}33`);
-            glass.addColorStop(0.5, 'rgba(10, 4, 20, 0.75)');
-            glass.addColorStop(1, `${zone.color}22`);
-            this._roundedRectPath(ctx, -w / 2, -h / 2, w, h, 14);
+            glass.addColorStop(0, `${zone.color}55`);
+            glass.addColorStop(0.5, 'rgba(8, 3, 16, 0.8)');
+            glass.addColorStop(1, `${zone.color}33`);
+            this._roundedRectPath(ctx, -w / 2, -h / 2, w, h, 12);
             ctx.fillStyle = glass;
             ctx.fill();
 
-            // --- Bordure néon (glow coloré) ---
+            // Reflet diagonal (effet verre/gemme)
+            ctx.save();
+            this._roundedRectPath(ctx, -w / 2, -h / 2, w, h, 12);
+            ctx.clip();
+            const shine = ctx.createLinearGradient(-w / 2, -h / 2, 0, 0);
+            shine.addColorStop(0, 'rgba(255,255,255,0.22)');
+            shine.addColorStop(0.35, 'rgba(255,255,255,0)');
+            ctx.fillStyle = shine;
+            ctx.fillRect(-w / 2, -h / 2, w, h * 0.6);
+            ctx.restore();
+
+            // --- Double bordure façon bijou (glow coloré + trait or) ---
             ctx.save();
             ctx.shadowColor = zone.color;
-            ctx.shadowBlur = isJackpot ? 26 : 16;
-            ctx.lineWidth = 4;
+            ctx.shadowBlur = isJackpot ? 28 : 14;
+            ctx.lineWidth = 5;
             ctx.strokeStyle = zone.color;
-            this._roundedRectPath(ctx, -w / 2, -h / 2, w, h, 14);
+            this._roundedRectPath(ctx, -w / 2, -h / 2, w, h, 12);
             ctx.stroke();
             ctx.restore();
 
-            // --- Liseré doré intérieur ---
             ctx.lineWidth = 2;
             ctx.strokeStyle = '#ffd76a';
-            this._roundedRectPath(ctx, -w / 2 + 5, -h / 2 + 5, w - 10, h - 10, 10);
+            this._roundedRectPath(ctx, -w / 2 + 5, -h / 2 + 5, w - 10, h - 10, 9);
             ctx.stroke();
 
-            // --- Gemme dorée en haut du cadre ---
-            ctx.save();
-            ctx.translate(0, -h / 2);
-            ctx.rotate(Math.PI / 4);
-            const gemSize = 11;
-            ctx.fillStyle = zone.color;
-            ctx.strokeStyle = '#ffd76a';
-            ctx.lineWidth = 2;
-            ctx.fillRect(-gemSize / 2, -gemSize / 2, gemSize, gemSize);
-            ctx.strokeRect(-gemSize / 2, -gemSize / 2, gemSize, gemSize);
-            ctx.restore();
+            // --- Gemmes dorées aux 4 coins (façon bijou serti) ---
+            const corners = [
+                [-w / 2, -h / 2], [w / 2, -h / 2],
+                [-w / 2, h / 2], [w / 2, h / 2]
+            ];
+            const gemSize = isJackpot ? 13 : 9;
+            for (const [gx, gy] of corners) {
+                ctx.save();
+                ctx.translate(gx, gy);
+                ctx.rotate(Math.PI / 4);
+                ctx.fillStyle = zone.color;
+                ctx.strokeStyle = '#ffd76a';
+                ctx.lineWidth = 1.5;
+                ctx.fillRect(-gemSize / 2, -gemSize / 2, gemSize, gemSize);
+                ctx.strokeRect(-gemSize / 2, -gemSize / 2, gemSize, gemSize);
+                ctx.restore();
+            }
 
-            // --- Texte ---
+            // --- Texte (contour sombre pour rester lisible sur tout fond) ---
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.shadowColor = zone.color;
-            ctx.shadowBlur = 10;
 
             if (isJackpot) {
                 ctx.font = `${Math.min(34, h * 0.24)}px Arial`;
                 ctx.fillText('👑', 0, -h * 0.22);
 
-                ctx.fillStyle = '#ffd76a';
-                const size = this._fitText(ctx, 'x20', w - 16, 44);
+                const size = this._fitText(ctx, 'x20', w - 14, 44);
                 ctx.font = `900 ${size}px Segoe UI, Arial`;
+                ctx.lineJoin = 'round';
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = 'rgba(20, 8, 0, 0.85)';
+                ctx.strokeText('x20', 0, h * 0.20);
+                ctx.shadowColor = zone.color;
+                ctx.shadowBlur = 12;
+                ctx.fillStyle = '#ffd76a';
                 ctx.fillText('x20', 0, h * 0.20);
             } else {
                 const label = `x${zone.value}`;
-                ctx.fillStyle = '#ffffff';
-                const size = this._fitText(ctx, label, w - 16, 40);
+                const size = this._fitText(ctx, label, w - 14, 40);
                 ctx.font = `900 ${size}px Segoe UI, Arial`;
+                ctx.lineJoin = 'round';
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = 'rgba(10, 4, 20, 0.85)';
+                ctx.strokeText(label, 0, 2);
+                ctx.shadowColor = zone.color;
+                ctx.shadowBlur = 8;
+                ctx.fillStyle = '#ffffff';
                 ctx.fillText(label, 0, 2);
             }
 
