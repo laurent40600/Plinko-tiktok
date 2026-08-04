@@ -11,32 +11,44 @@
    les utilisateurs déjà installés.
    ============================================================ */
 
-const CACHE_VERSION = 'royal-drop-v2.7.0';
+const CACHE_VERSION = 'royal-drop-v3.0.0';
 const CACHE_NAME = `royal-drop-cache-${CACHE_VERSION}`;
 
-// Liste de tous les fichiers essentiels au fonctionnement hors ligne
+// Liste de tous les fichiers essentiels au fonctionnement hors ligne.
+// Architecture v3 (src/, modules ES natifs) — les anciens js/*.js ne
+// sont plus chargés par index.html, donc plus précachés ici.
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './style.css',
     './manifest.json',
 
-    './js/config.js',
-    './js/storage.js',
-    './js/events.js',
-    './js/audio.js',
-    './js/particles.js',
-    './js/camera.js',
-    './js/physics.js',
-    './js/ball.js',
-    './js/board.js',
-    './js/renderer.js',
-    './js/players.js',
-    './js/leaderboard.js',
-    './js/bots.js',
-    './js/ui.js',
-    './js/engine.js',
-    './js/game.js',
+    './src/main.js',
+    './src/core/camera.js',
+    './src/core/config.js',
+    './src/core/engine.js',
+    './src/core/events.js',
+    './src/core/storage.js',
+    './src/core/viewport.js',
+    './src/entities/ball.js',
+    './src/entities/board.js',
+    './src/render/background.js',
+    './src/render/balls.js',
+    './src/render/board.js',
+    './src/render/buckets.js',
+    './src/render/frame.js',
+    './src/render/imageCache.js',
+    './src/render/particles.js',
+    './src/render/pipeline.js',
+    './src/render/shapes.js',
+    './src/systems/audio.js',
+    './src/systems/bots.js',
+    './src/systems/gameFeel.js',
+    './src/systems/leaderboard.js',
+    './src/systems/particles.js',
+    './src/systems/physics.js',
+    './src/systems/players.js',
+    './src/ui/hud.js',
 
     './assets/icons/icon-192.png',
     './assets/icons/icon-512.png',
