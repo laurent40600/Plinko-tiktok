@@ -15,8 +15,11 @@ export class Board {
     latticeLines = []; // [{x1,y1,x2,y2}, ...]
 
     generate() {
-        this.pegs = this._generatePegs();
+        // Les buckets d'abord : les colonnes de picots se calent dessus
+        // (un picot centré au-dessus de chaque multiplicateur, sauf les
+        // deux x0.5 aux extrémités — comme sur la référence).
         this.bucketZones = this._generateBucketZones();
+        this.pegs = this._generatePegs();
         this.latticeLines = this._generateLatticeLines();
     }
 
@@ -24,20 +27,28 @@ export class Board {
         const B = CONFIG.BOARD;
         const pegs = [];
 
-        const playWidth = CONFIG.LOGICAL_WIDTH - (B.MARGIN_X * 2);
-        const pegsPerRow = Math.floor(playWidth / B.PEG_SPACING_X);
+        // Colonnes "centrées" : une par bucket, sauf le premier et le
+        // dernier (les deux x0.5) qui ne doivent avoir aucun picot au-dessus.
+        const centerCols = this.bucketZones
+            .slice(1, -1)
+            .map(zone => (zone.xStart + zone.xEnd) / 2);
+
+        // Colonnes "décalées" : aux milieux entre colonnes centrées,
+        // pour l'alternance en quinconce classique d'un plateau Plinko.
+        const offsetCols = [];
+        for (let i = 0; i < centerCols.length - 1; i++) {
+            offsetCols.push((centerCols[i] + centerCols[i + 1]) / 2);
+        }
+
+        // Écart réel entre colonnes adjacentes, pour le maillage décoratif
+        // (les colonnes dérivent des buckets, plus de la constante fixe).
+        this._colSpacing = centerCols.length > 1 ? centerCols[1] - centerCols[0] : 0;
 
         for (let row = 0; row < B.ROWS; row++) {
-            const isOffsetRow = row % 2 === 1;
-            const rowPegCount = isOffsetRow ? pegsPerRow - 1 : pegsPerRow;
-            const rowWidth = (rowPegCount - 1) * B.PEG_SPACING_X;
-            const startX = (CONFIG.LOGICAL_WIDTH - rowWidth) / 2;
-
-            for (let col = 0; col < rowPegCount; col++) {
-                pegs.push({
-                    x: startX + col * B.PEG_SPACING_X,
-                    y: B.BOARD_TOP_Y + row * B.PEG_SPACING_Y
-                });
+            const cols = row % 2 === 1 ? offsetCols : centerCols;
+            const y = B.BOARD_TOP_Y + row * B.PEG_SPACING_Y;
+            for (const x of cols) {
+                pegs.push({ x, y });
             }
         }
         return pegs;
@@ -46,7 +57,7 @@ export class Board {
     /** Segments décoratifs reliant chaque picot à ses voisins diagonaux. */
     _generateLatticeLines() {
         const B = CONFIG.BOARD;
-        const maxDx = B.PEG_SPACING_X * 0.6;
+        const maxDx = (this._colSpacing || B.PEG_SPACING_X) * 0.6;
         const maxDy = B.PEG_SPACING_Y * 1.15;
         const lines = [];
 
