@@ -41,7 +41,10 @@ html, body {
     background: radial-gradient(ellipse at 50% 30%, #2a1245 0%, #0d0518 65%, #05010a 100%);
 }
 
-/* Canvas de jeu occupe tout l'espace logique */
+/* Canvas de jeu occupe tout l'espace logique.
+   Léger boost saturation/contraste/luminosité pour un rendu plus
+   "premium" (couleurs plus vives, glows plus éclatants) sans
+   retoucher chaque dessin individuellement. */
 #game-canvas {
     position: absolute;
     top: 0;
@@ -49,6 +52,7 @@ html, body {
     width: 1080px;
     height: 1920px;
     display: block;
+    filter: saturate(1.25) contrast(1.1) brightness(1.06);
 }
 
 /* Toutes les couches UI se superposent au canvas sans bloquer les clics
@@ -223,40 +227,6 @@ html, body {
     border-radius: 8px;
     color: #fff;
     text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-}
-
-/* ============================================================
-   BOUTON LANCER
-   ============================================================ */
-#ui-launch {
-    bottom: 60px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-}
-#launch-btn {
-    pointer-events: auto;
-    background: linear-gradient(135deg, #3a1a5c, #1a0a2e);
-    border: 3px solid #ffd76a;
-    border-radius: 40px;
-    padding: 20px 70px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    box-shadow: 0 0 30px rgba(255, 215, 106, 0.4);
-}
-#launch-label {
-    color: #ffd76a;
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: 3px;
-}
-#launch-cost {
-    color: #fff;
-    font-size: 22px;
 }
 
 /* ============================================================
