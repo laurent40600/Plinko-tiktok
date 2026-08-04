@@ -85,12 +85,24 @@ function drawBucketPanel(ctx, zone, h, isJackpot) {
     ctx.fillRect(-w / 2, -h / 2, w, h * 0.6);
     ctx.restore();
 
-    // Double bordure façon bijou (glow coloré + trait or)
+    // Bordure façon tube néon : glow coloré large, puis un cœur clair
+    // et fin par-dessus (comme un vrai tube au néon, blanc en son
+    // centre, qui irradie sa couleur tout autour).
     ctx.save();
     ctx.shadowColor = zone.color;
-    ctx.shadowBlur = isJackpot ? 40 : 24;
-    ctx.lineWidth = 5;
+    ctx.shadowBlur = isJackpot ? 46 : 30;
+    ctx.lineWidth = 6;
     ctx.strokeStyle = zone.color;
+    roundedRectPath(ctx, -w / 2, -h / 2, w, h, 12);
+    ctx.stroke();
+    ctx.stroke(); // deux passes = glow plus dense
+    ctx.restore();
+
+    ctx.save();
+    ctx.shadowColor = zone.color;
+    ctx.shadowBlur = 8;
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
     roundedRectPath(ctx, -w / 2, -h / 2, w, h, 12);
     ctx.stroke();
     ctx.restore();

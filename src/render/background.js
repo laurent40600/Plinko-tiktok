@@ -35,19 +35,21 @@ export function drawBackground(ctx, theme) {
     const dh = img.height * scale;
     ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
 
-    // Voile façon panneau capitonné sombre — la référence est un
-    // cuir/velours quasi noir avec une légère dominante prune, PAS
-    // un panneau violet lumineux (l'éclat vient des picots dorés et
-    // des rails néon du cadre, pas d'un fond éclairé).
-    ctx.fillStyle = 'rgba(22, 13, 20, 0.86)';
+    // Voile façon panneau capitonné quasi noir. La référence ne
+    // montre PAS un couloir/portail visible derrière les picots :
+    // c'est un panneau de cuir sombre uni. Voile très opaque pour
+    // que la photo de fond (utile ailleurs, hors de cette découpe)
+    // n'y laisse plus transparaître son motif (mandala, colonnes...).
+    ctx.fillStyle = 'rgba(18, 11, 16, 0.95)';
     ctx.fillRect(0, 0, W, H);
 
     // Très léger halo au centre-haut, juste assez pour suggérer une
-    // source de lumière derrière l'arche, sans éclaircir tout le panneau.
+    // source de lumière derrière l'arche, sans éclaircir le panneau
+    // ni laisser deviner la photo dessous.
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    const glow = ctx.createRadialGradient(W / 2, H * 0.22, 10, W / 2, H * 0.22, W * 0.3);
-    glow.addColorStop(0, 'rgba(180, 90, 190, 0.18)');
+    const glow = ctx.createRadialGradient(W / 2, H * 0.22, 10, W / 2, H * 0.22, W * 0.22);
+    glow.addColorStop(0, 'rgba(180, 90, 190, 0.12)');
     glow.addColorStop(1, 'rgba(180, 90, 190, 0)');
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, W, H);

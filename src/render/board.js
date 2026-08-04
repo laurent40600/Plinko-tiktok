@@ -46,15 +46,17 @@ export function drawPegs(ctx, board) {
 
         // Ombre portée : donne l'impression que le picot dépasse du panneau
         ctx.beginPath();
-        ctx.ellipse(x + 3, y + r * 1.1, r * 0.9, r * 0.5, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + 3, y + r * 2.1, r * 0.9, r * 0.45, 0, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
         ctx.fill();
 
-        // --- Tige (le picot dépasse du panneau, pas une simple bille plate) ---
-        const neckTop = y + r * 0.5;
-        const neckBottom = y + r * 1.15;
-        const neckTopW = r * 0.62;
-        const neckBottomW = r * 0.44;
+        // --- Tige (le picot dépasse nettement du panneau, pas une
+        // simple bille plate — une bonne partie doit dépasser sous
+        // la tête pour bien se voir une fois la tête dessinée dessus).
+        const neckTop = y + r * 0.25;
+        const neckBottom = y + r * 2.0;
+        const neckTopW = r * 0.56;
+        const neckBottomW = r * 0.4;
 
         const neckGrad = ctx.createLinearGradient(x - neckTopW, 0, x + neckTopW, 0);
         neckGrad.addColorStop(0, '#5a3006');
