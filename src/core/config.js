@@ -52,7 +52,7 @@ export const CONFIG = {
         ],
         JACKPOT_INDEX: 4,
         HEIGHT: 140,
-        BOTTOM_OFFSET: 300, // distance entre le bas du plateau et le haut des buckets (resserré sous les picots)
+        BOTTOM_OFFSET: 240, // distance entre le bas du plateau et le haut des buckets — mesurée sur la référence (~0.6x l'espacement entre 2 rangées de picots)
         JACKPOT_PULSE_DURATION: 600
     },
 
