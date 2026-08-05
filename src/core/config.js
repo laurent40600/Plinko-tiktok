@@ -73,10 +73,13 @@ export const CONFIG = {
 
     CAMERA: {
         FOLLOW_ENABLED: true,
-        FOLLOW_SMOOTHING: 0.08,
+        // Assez rapide pour que la caméra suive nettement la bille pendant
+        // le mode cinématique Jackpot (voir JackpotManager.update), sans
+        // traîner derrière un mouvement qui dure moins d'une seconde.
+        FOLLOW_SMOOTHING: 0.16,
         ZOOM_ON_DROP: 1.05,
         ZOOM_DEFAULT: 1.0,
-        ZOOM_SMOOTHING: 0.05
+        ZOOM_SMOOTHING: 0.12
     },
 
     AUDIO: {

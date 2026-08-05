@@ -15,8 +15,8 @@
     "approachDistancePx": 260,
     "slowMotionTimeScale": 0.35,
     "slowMotionRampMs": 500,
-    "cameraZoom": 1.55,
-    "spotlightRadiusPx": 220
+    "cameraZoom": 1.28,
+    "spotlightRadiusPx": 280
   },
   "coronation": {
     "durationSec": 6,

@@ -43,6 +43,11 @@ export class RenderPipeline {
         const ctx = this.ctx;
         const theme = CONFIG.THEMES.LIST[CONFIG.THEMES.CURRENT];
         const balls = this.ballManager.getActiveBalls();
+        // Pendant le mode cinématique Jackpot, les buckets zooment AVEC la
+        // caméra : l'entrée dans la case reste un plan rapproché clair au
+        // lieu d'un cadre fixe déconnecté du zoom. Le reste du temps, ils
+        // restent hors caméra pour rester un repère stable et lisible.
+        const cinematicActive = !!this.effects?.cinematicActive;
 
         drawBackground(ctx, theme);
 
@@ -51,13 +56,12 @@ export class RenderPipeline {
         drawPegs(ctx, this.board);
         drawBallTrails(ctx, balls, debugFlags.trajectory);
         drawBalls(ctx, balls, debugFlags);
+        if (cinematicActive) drawBuckets(ctx, this.board);
         drawParticles(ctx, this.particles);
         if (this.effects?.spotlight) drawSpotlight(ctx, this.effects.spotlight);
         this.camera.restoreTransform(ctx);
 
-        // Les buckets restent hors transformation caméra : leur zone
-        // doit rester un repère fixe pour le joueur, jamais zoomée.
-        drawBuckets(ctx, this.board);
+        if (!cinematicActive) drawBuckets(ctx, this.board);
 
         drawFrame(ctx, theme);
     }

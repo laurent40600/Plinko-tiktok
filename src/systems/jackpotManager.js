@@ -48,6 +48,13 @@ export class JackpotManager {
         if (!jackpotZone) return;
 
         const jackpotX = (jackpotZone.xStart + jackpotZone.xEnd) / 2;
+        // Le zoom démarre dans les 3 dernières rangées (c'est là que la
+        // trajectoire converge vraiment vers une colonne — plus haut, la
+        // position d'une bille est encore trop dispersée pour dire si elle
+        // vise le Jackpot) et reste actif jusqu'à l'atterrissage : pendant
+        // ce court moment, les buckets sont dessinés DANS la caméra (voir
+        // render/pipeline.js) pour que l'entrée dans la case reste un plan
+        // rapproché clair, au lieu de disparaître derrière un cadre fixe.
         const approachY = CONFIG.BOARD.BOARD_TOP_Y + (CONFIG.BOARD.ROWS - 3) * CONFIG.BOARD.PEG_SPACING_Y;
         const approachDist = CONFIG.JACKPOT.cinematic?.approachDistancePx || 260;
 

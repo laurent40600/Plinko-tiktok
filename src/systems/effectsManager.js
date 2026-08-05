@@ -44,10 +44,15 @@ export class EffectsManager {
         eventBus.on('event:triggered', () => this._smallBurst('#ffd76a'));
     }
 
+    /** true tant que le mode cinématique Jackpot est actif (voir render/pipeline.js). */
+    get cinematicActive() {
+        return this._cinematicBall !== null;
+    }
+
     _startCinematic(ball) {
         this._cinematicBall = ball;
         this._targetTimeScale = CONFIG.JACKPOT.cinematic?.slowMotionTimeScale ?? 0.35;
-        this._spotlightAlphaTarget = 0.55;
+        this._spotlightAlphaTarget = 0.4;
     }
 
     _endCinematic() {
