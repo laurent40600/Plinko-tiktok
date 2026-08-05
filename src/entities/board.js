@@ -27,10 +27,11 @@ export class Board {
         const B = CONFIG.BOARD;
         const pegs = [];
 
-        // Colonnes "centrées" : une par bucket, sauf le premier et le
-        // dernier (les deux x0.5) qui ne doivent avoir aucun picot au-dessus.
+        // Colonnes "centrées" : une par bucket, y compris les deux x0.5 aux
+        // extrémités — le champ de picots doit couvrir toute la largeur du
+        // plateau jusqu'aux murs, comme sur la référence (pas de vide sur
+        // les côtés).
         const centerCols = this.bucketZones
-            .slice(1, -1)
             .map(zone => (zone.xStart + zone.xEnd) / 2);
 
         // Colonnes "décalées" : aux milieux entre colonnes centrées,

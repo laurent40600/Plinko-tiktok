@@ -31,6 +31,7 @@ export class ShowUI {
             viewerBannerText: document.getElementById('viewer-banner-text'),
 
             chestPanel: document.getElementById('ui-chest'),
+            chestIcon: document.getElementById('chest-icon'),
             chestFill: document.getElementById('chest-fill'),
             chestValue: document.getElementById('chest-value'),
             chestStage: document.getElementById('chest-stage'),
@@ -120,6 +121,9 @@ export class ShowUI {
         this.els.chestFill.style.width = `${percent}%`;
         this.els.chestValue.textContent = `${energy} / ${goal}`;
         this.els.chestStage.textContent = chestOpen ? 'Ouvert !' : this._stageLabel(stageId);
+
+        const iconStage = chestOpen ? 'open' : (stageId || 'locked');
+        this.els.chestIcon.setAttribute('class', `chest-icon stage-${iconStage}`);
     }
 
     _stageLabel(stageId) {
