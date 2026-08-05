@@ -32,8 +32,15 @@ export class EventManager {
         });
     }
 
-    /** Déclenche un événement de /config/events.json par son id (résultat de la Roue Royale). */
-    trigger(eventId) {
+    /**
+     * Déclenche un événement de /config/events.json par son id (résultat de la
+     * Roue Royale).
+     * @param {object} [context] - { playerName } : le joueur dont la bille a
+     * déclenché la roue. Pour les événements qui font tomber des billes bonus
+     * (Pluie de Billes, Royal Drop), ces billes lui appartiennent — c'est lui
+     * qui empoche leurs gains, pas un "Royal Event" anonyme.
+     */
+    trigger(eventId, context = {}) {
         const cfg = (CONFIG.EVENTS?.events || []).find(e => e.id === eventId);
         if (!cfg) return null;
 
@@ -42,7 +49,7 @@ export class EventManager {
 
         if (cfg.payoutMultiplier) this._applyPayoutMultiplier(cfg.payoutMultiplier, cfg.durationSec);
         if (cfg.bonusBucketMultiplier) this._applyBonusBucket(cfg.bonusBucketMultiplier, cfg.durationSec);
-        if (cfg.ballRainCount) this._triggerBallRain(cfg);
+        if (cfg.ballRainCount) this._triggerBallRain(cfg, context.playerName);
         if (cfg.goldenBallSkin) this._applyGoldenBalls(cfg.durationSec);
 
         return cfg;
@@ -96,14 +103,17 @@ export class EventManager {
         this._scheduleRevert(() => { CONFIG.RUNTIME.goldenBallsActive = false; }, durationSec);
     }
 
-    _triggerBallRain(cfg) {
+    _triggerBallRain(cfg, playerName) {
         this.ballQueue.setBurstMode(10);
 
         const ballType = CONFIG.GIFTS?.ballTypes?.[cfg.ballType] || {};
         const requests = [];
         for (let i = 0; i < cfg.ballRainCount; i++) {
             requests.push({
-                playerName: 'Royal Event',
+                // Ces billes appartiennent au joueur qui a déclenché la roue :
+                // ses gains (points, classement) selon la case touchée par
+                // chacune des N billes lui reviennent, comme un lancer normal.
+                playerName: playerName || 'Royal Event',
                 avatar: null,
                 betAmount: CONFIG.ECONOMY.LAUNCH_COST,
                 source: 'event',

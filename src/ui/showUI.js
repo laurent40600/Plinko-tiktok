@@ -214,23 +214,45 @@ export class ShowUI {
 
     /* ---------------- Roue Royale ---------------- */
 
-    _startWheel({ segments, spinDurationMs, chosenId }) {
+    _startWheel({ segments, spinDurationMs, spinTurns, chosenId }) {
         this._wheelSpinning = true;
         this.els.wheelResultLabel.textContent = '';
         this.els.wheelScene.classList.add('visible');
         this.els.wheelScene.classList.remove('hidden');
 
+        // Animation pilotée en JS (pas une transition CSS) : une vraie roue de
+        // jeu part vite puis ralentit longuement et progressivement jusqu'à
+        // l'arrêt, sans jamais dépasser sa cible ni revenir en arrière.
+        if (this._wheelAnimFrame) cancelAnimationFrame(this._wheelAnimFrame);
         this.els.wheelDial.style.transition = 'none';
         this.els.wheelDial.style.transform = 'rotate(0deg)';
-        // Force le reflow pour que la transition de spin reparte de 0deg proprement.
-        void this.els.wheelDial.offsetWidth;
 
         const index = Math.max(0, segments.indexOf(chosenId));
         const sliceDeg = 360 / segments.length;
-        const targetDeg = 360 * 6 + index * sliceDeg + sliceDeg / 2;
+        // Petit aléa dans le segment gagnant (jamais assez pour chevaucher un
+        // voisin) : la roue s'arrête à un point légèrement différent à chaque
+        // fois, pas toujours pile au centre — plus crédible qu'une vraie roue.
+        const jitter = (Math.random() - 0.5) * sliceDeg * 0.5;
+        const turns = spinTurns || 8;
+        const targetDeg = 360 * turns + index * sliceDeg + sliceDeg / 2 + jitter;
 
-        this.els.wheelDial.style.transition = `transform ${spinDurationMs}ms cubic-bezier(0.15, 0.85, 0.25, 1)`;
-        this.els.wheelDial.style.transform = `rotate(${targetDeg}deg)`;
+        const duration = spinDurationMs || 5400;
+        const startTime = performance.now();
+        const dial = this.els.wheelDial;
+
+        const step = (now) => {
+            const t = Math.min(1, (now - startTime) / duration);
+            // Ease-out quartique : vitesse maximale au départ, décélération
+            // longue et lisse, se pose exactement sur la cible à t=1.
+            const eased = 1 - Math.pow(1 - t, 4);
+            dial.style.transform = `rotate(${targetDeg * eased}deg)`;
+            if (t < 1) {
+                this._wheelAnimFrame = requestAnimationFrame(step);
+            } else {
+                this._wheelAnimFrame = null;
+            }
+        };
+        this._wheelAnimFrame = requestAnimationFrame(step);
     }
 
     _resolveWheel({ eventId }) {

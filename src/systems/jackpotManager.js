@@ -128,11 +128,19 @@ export class JackpotManager {
         const chosenId = segments[Math.floor(Math.random() * segments.length)];
         const spinMs = wheelCfg.spinDurationMs || 4000;
 
-        this.eventBus.emit('jackpot:wheelStart', { segments, spinDurationMs: spinMs, chosenId });
+        this.eventBus.emit('jackpot:wheelStart', {
+            segments,
+            spinDurationMs: spinMs,
+            spinTurns: wheelCfg.spinTurns || 8,
+            chosenId
+        });
 
         setTimeout(() => {
-            this.eventBus.emit('jackpot:wheelResult', { eventId: chosenId });
-            this.eventManager?.trigger(chosenId);
+            this.eventBus.emit('jackpot:wheelResult', { eventId: chosenId, playerName });
+            // La bille qui a déclenché la roue reste "propriétaire" de l'événement :
+            // si celui-ci fait tomber des billes bonus (Pluie de Billes, Royal
+            // Drop), leurs gains lui reviennent (voir EventManager._triggerBallRain).
+            this.eventManager?.trigger(chosenId, { playerName });
             this._triggerCoronation({ playerName });
         }, spinMs);
     }

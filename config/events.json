@@ -1,8 +1,8 @@
 {
   "_comment": "Événements spéciaux déclenchés par la Roue Royale (jackpot débloqué) ou par des cadeaux rares. N'altèrent jamais les picots/positions/probabilités du plateau : uniquement des bonus économiques temporaires et des effets visuels.",
   "wheel": {
-    "spinDurationMs": 4200,
-    "slowDownStartMs": 2600,
+    "spinDurationMs": 5400,
+    "spinTurns": 8,
     "segments": ["double_gains", "pluie_de_billes", "case_bonus", "billes_dorees", "royal_drop"]
   },
   "events": [
