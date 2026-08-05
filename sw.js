@@ -11,7 +11,7 @@
    les utilisateurs déjà installés.
    ============================================================ */
 
-const CACHE_VERSION = 'royal-drop-v3.2.0';
+const CACHE_VERSION = 'royal-drop-v3.3.0';
 const CACHE_NAME = `royal-drop-cache-${CACHE_VERSION}`;
 
 // Liste de tous les fichiers essentiels au fonctionnement hors ligne.
@@ -77,6 +77,10 @@ const ASSETS_TO_CACHE = [
     './assets/icons/icon-maskable-192.png',
     './assets/icons/icon-maskable-512.png',
     './assets/icons/apple-touch-icon.png',
+    './assets/icons/chest/chest-stage-glow.png',
+    './assets/icons/chest/chest-stage-crack.png',
+    './assets/icons/chest/chest-stage-shake.png',
+    './assets/icons/chest/chest-stage-open.png',
 
     './assets/backgrounds/royal-throne.jpg',
     './assets/backgrounds/royal-frame.webp'

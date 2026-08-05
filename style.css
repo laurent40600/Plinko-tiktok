@@ -351,52 +351,50 @@ html, body {
     flex: 1;
     min-width: 0;
 }
+/* Coffre Royal : 4 illustrations réelles (assets/icons/chest/), empilées et
+   fondues (crossfade) selon le palier — plus une variante ternie/grisée de
+   l'image "glow" pour l'état verrouillé (0-24%), faute d'illustration dédiée. */
 .chest-icon {
+    position: relative;
+    width: 76px;
+    height: 66px;
     flex-shrink: 0;
-    overflow: visible;
 }
-.chest-lid {
-    transform-box: fill-box;
-    transform-origin: 8px 51px;
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.chest-cracks {
-    transition: opacity 0.4s ease;
-}
-.chest-glow-halo {
-    transition: opacity 0.6s ease;
-}
-.chest-burst {
-    transition: opacity 0.4s ease;
+.chest-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.6s ease, filter 0.6s ease;
 }
 
 /* 0-24% : coffre fermé, terne */
-.chest-icon.stage-locked .chest-glow-halo { opacity: 0; }
+.chest-icon.stage-locked .chest-img-glow {
+    opacity: 0.8;
+    filter: grayscale(70%) brightness(0.5);
+}
 
 /* 25-49% : "le coffre s'illumine" */
-.chest-icon.stage-glow .chest-glow-halo {
-    opacity: 0.55;
+.chest-icon.stage-glow .chest-img-glow {
+    opacity: 1;
     animation: chest-glow-pulse 1.8s ease-in-out infinite;
 }
 
 /* 50-74% : "fissures apparaissent" */
-.chest-icon.stage-crack .chest-glow-halo { opacity: 0.55; }
-.chest-icon.stage-crack .chest-cracks { opacity: 1; }
+.chest-icon.stage-crack .chest-img-crack { opacity: 1; }
 
 /* 75-99% : "le coffre tremble" */
-.chest-icon.stage-shake .chest-glow-halo { opacity: 0.75; }
-.chest-icon.stage-shake .chest-cracks { opacity: 1; }
+.chest-icon.stage-shake .chest-img-shake { opacity: 1; }
 .chest-icon.stage-shake { animation: chest-shake-anim 0.5s ease-in-out infinite; }
 
 /* 100% : "le coffre s'ouvre" */
-.chest-icon.stage-open .chest-lid { transform: rotate(-55deg); }
-.chest-icon.stage-open .chest-glow-halo { opacity: 1; }
-.chest-icon.stage-open .chest-burst { opacity: 1; }
-.chest-icon.stage-open .chest-cracks { opacity: 0; }
+.chest-icon.stage-open .chest-img-open { opacity: 1; }
 
 @keyframes chest-glow-pulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.75; }
+    0%, 100% { filter: brightness(0.85); }
+    50% { filter: brightness(1.25); }
 }
 @keyframes chest-shake-anim {
     0%, 100% { transform: translateX(0) rotate(0deg); }

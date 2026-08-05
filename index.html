@@ -84,34 +84,12 @@
     <div id="ui-chest" class="ui-layer ui-panel compact-panel">
         <h2>Coffre Royal</h2>
         <div class="chest-row">
-            <svg id="chest-icon" class="chest-icon stage-locked" viewBox="0 0 100 90" width="64" height="58">
-                <defs>
-                    <linearGradient id="chestBaseGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0" stop-color="#c9860f"/>
-                        <stop offset="1" stop-color="#5a3006"/>
-                    </linearGradient>
-                    <linearGradient id="chestLidGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0" stop-color="#ffe9a8"/>
-                        <stop offset="1" stop-color="#c9860f"/>
-                    </linearGradient>
-                </defs>
-                <ellipse class="chest-glow-halo" cx="50" cy="50" rx="46" ry="40" fill="#ffd76a" opacity="0"/>
-                <rect x="8" y="46" width="84" height="36" rx="6" fill="url(#chestBaseGrad)" stroke="#2f1803" stroke-width="2.5"/>
-                <rect x="42" y="46" width="16" height="36" fill="#8a5f18" stroke="#2f1803" stroke-width="1"/>
-                <path class="chest-cracks" d="M28 50 L36 64 M72 48 L64 66 M50 46 L54 62" stroke="#ff2d78" stroke-width="2.5" fill="none" opacity="0" stroke-linecap="round"/>
-                <g id="chest-lid" class="chest-lid">
-                    <path d="M8 48 Q50 12 92 48 L92 54 L8 54 Z" fill="url(#chestLidGrad)" stroke="#2f1803" stroke-width="2.5"/>
-                    <rect x="42" y="16" width="16" height="34" fill="#8a5f18" stroke="#2f1803" stroke-width="1"/>
-                    <circle cx="50" cy="52" r="8" fill="#ffd76a" stroke="#2f1803" stroke-width="2"/>
-                </g>
-                <g class="chest-burst" opacity="0">
-                    <circle cx="50" cy="30" r="3" fill="#ffd76a"/>
-                    <circle cx="30" cy="24" r="2.4" fill="#b478ff"/>
-                    <circle cx="70" cy="22" r="2.4" fill="#ffd76a"/>
-                    <circle cx="60" cy="14" r="2" fill="#fff"/>
-                    <circle cx="40" cy="12" r="2" fill="#ffd76a"/>
-                </g>
-            </svg>
+            <div id="chest-icon" class="chest-icon stage-locked">
+                <img class="chest-img chest-img-glow" src="assets/icons/chest/chest-stage-glow.png" alt="">
+                <img class="chest-img chest-img-crack" src="assets/icons/chest/chest-stage-crack.png" alt="">
+                <img class="chest-img chest-img-shake" src="assets/icons/chest/chest-stage-shake.png" alt="">
+                <img class="chest-img chest-img-open" src="assets/icons/chest/chest-stage-open.png" alt="">
+            </div>
             <div class="chest-info">
                 <div class="meter"><div id="chest-fill" class="meter-fill gold"></div></div>
                 <div class="panel-subline"><span id="chest-value">0 / 1000</span><span id="chest-stage">Verrouillé</span></div>
