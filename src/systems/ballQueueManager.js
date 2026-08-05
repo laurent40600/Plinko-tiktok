@@ -36,12 +36,14 @@ export class BallQueueManager {
         this.queue.push(request);
         this._sortByPriority();
         this._tryDequeue();
+        this._emitQueueUpdate();
     }
 
     enqueueMany(requests) {
         this.queue.push(...requests);
         this._sortByPriority();
         this._tryDequeue();
+        this._emitQueueUpdate();
     }
 
     _sortByPriority() {
@@ -49,10 +51,26 @@ export class BallQueueManager {
     }
 
     _tryDequeue() {
+        let dequeuedAny = false;
         while (this.ballManager.activeCount < this.maxVisible && this.queue.length > 0) {
             const request = this.queue.shift();
             this.eventBus.emit('game:spawnBall', request);
+            dequeuedAny = true;
         }
+        if (dequeuedAny) this._emitQueueUpdate();
+    }
+
+    /** Notifie l'UI ("Prochains joueurs") de l'état actuel de la file d'attente. */
+    _emitQueueUpdate() {
+        this.eventBus.emit('queue:updated', {
+            pending: this.queue.slice(0, 6).map(r => ({
+                playerName: r.playerName,
+                ballType: r.ballType,
+                symbol: r.symbol,
+                color: r.color
+            })),
+            totalPending: this.queue.length
+        });
     }
 
     /** Lève temporairement le plafond de billes visibles (moments "pluie de billes"). */

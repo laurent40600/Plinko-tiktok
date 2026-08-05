@@ -9,7 +9,7 @@
   "lock": {
     "startsLocked": true,
     "unlockDurationSec": 60,
-    "unlockMaxJackpotHits": 5
+    "unlockMaxJackpotHits": 1
   },
   "cinematic": {
     "approachDistancePx": 260,

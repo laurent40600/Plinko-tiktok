@@ -16,8 +16,8 @@ export class Board {
 
     generate() {
         // Les buckets d'abord : les colonnes de picots se calent dessus
-        // (un picot centré au-dessus de chaque multiplicateur, sauf les
-        // deux x0.5 aux extrémités — comme sur la référence).
+        // (une colonne par multiplicateur, sur toute la largeur du plateau
+        // — comme sur la référence, pas de vide sur les côtés).
         this.bucketZones = this._generateBucketZones();
         this.pegs = this._generatePegs();
         this.latticeLines = this._generateLatticeLines();
@@ -27,12 +27,21 @@ export class Board {
         const B = CONFIG.BOARD;
         const pegs = [];
 
-        // Colonnes "centrées" : une par bucket, y compris les deux x0.5 aux
-        // extrémités — le champ de picots doit couvrir toute la largeur du
-        // plateau jusqu'aux murs, comme sur la référence (pas de vide sur
-        // les côtés).
-        const centerCols = this.bucketZones
-            .map(zone => (zone.xStart + zone.xEnd) / 2);
+        // Une colonne par bucket, mais RECADRÉE avec une marge de sécurité
+        // vis-à-vis des murs : un picot collé au mur crée une zone de
+        // collision qui chevauche celle du mur (bille+picot+mur trop
+        // proches), ce qui peut coincer la bille en boucle infinie de
+        // rebonds. safeClearance garantit qu'un picot ne peut jamais
+        // toucher un mur en même temps qu'une bille.
+        const safeClearance = CONFIG.BALL.RADIUS + B.PEG_RADIUS + 20;
+        const minX = B.MARGIN_X + safeClearance;
+        const maxX = CONFIG.LOGICAL_WIDTH - B.MARGIN_X - safeClearance;
+
+        const bucketCount = this.bucketZones.length;
+        const centerCols = this.bucketZones.map((_, i) => {
+            const t = bucketCount > 1 ? i / (bucketCount - 1) : 0.5;
+            return minX + t * (maxX - minX);
+        });
 
         // Colonnes "décalées" : aux milieux entre colonnes centrées,
         // pour l'alternance en quinconce classique d'un plateau Plinko.

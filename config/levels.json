@@ -1,8 +1,8 @@
 {
-  "_comment": "Système de progression communautaire : points d'énergie du Coffre Royal, paliers visuels, et Clés Royales (chemin alternatif vers l'ouverture du coffre).",
+  "_comment": "Système de progression communautaire : points d'énergie du Coffre Royal, paliers visuels, et Clés Royales (chemin alternatif vers l'ouverture du coffre). energyGoal/keys.goal calibrés par simulation (100k+ billes, voir /docs ou le rapport de session) pour un coffre qui s'ouvre en moyenne toutes les ~10 min sur un live actif, avec une contribution énergie/clés quasi égale (50/50) — ce ne sont pas les valeurs de la maquette de référence (732/1000, 34/50), qui n'étaient qu'un exemple d'illustration statique.",
   "community": {
-    "energyGoal": 1000,
-    "startingEnergy": 732,
+    "energyGoal": 11000,
+    "startingEnergy": 8050,
     "stages": [
       { "atPercent": 25, "id": "glow", "label": "Le coffre s'illumine" },
       { "atPercent": 50, "id": "crack", "label": "Fissures apparaissent" },
@@ -17,7 +17,7 @@
     "new_follow": 15
   },
   "keys": {
-    "goal": 50,
-    "startingKeys": 34
+    "goal": 500,
+    "startingKeys": 335
   }
 }

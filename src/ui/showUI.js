@@ -53,6 +53,11 @@ export class ShowUI {
             combo: document.getElementById('ui-combo'),
             comboCount: document.getElementById('combo-count'),
 
+            queuePanel: document.getElementById('ui-queue'),
+            queueList: document.getElementById('queue-list'),
+            queueMore: document.getElementById('queue-more'),
+            queueMoreText: document.getElementById('queue-more-text'),
+
             wheelScene: document.getElementById('ui-wheel-scene'),
             wheelDial: document.getElementById('wheel-dial'),
             wheelResultLabel: document.getElementById('wheel-result-label'),
@@ -85,6 +90,8 @@ export class ShowUI {
         bus.on('boss:defeated', () => this._onBossDefeated());
 
         bus.on('combo:updated', (data) => this._onComboUpdated(data));
+
+        bus.on('queue:updated', (data) => this._onQueueUpdated(data));
 
         bus.on('jackpot:wheelStart', (data) => this._startWheel(data));
         bus.on('jackpot:wheelResult', (data) => this._resolveWheel(data));
@@ -179,6 +186,30 @@ export class ShowUI {
         }
         this.els.comboCount.textContent = `x${count}`;
         this._show(this.els.combo, CONFIG.SHOW_ANIMATIONS?.combo?.holdMs || 1400);
+    }
+
+    /* ---------------- Prochains joueurs (file d'attente) ---------------- */
+
+    _onQueueUpdated({ pending, totalPending }) {
+        if (!totalPending) {
+            this.els.queuePanel.classList.remove('visible');
+            return;
+        }
+
+        this.els.queueList.innerHTML = pending.map((p) => {
+            const icon = p.symbol || GIFT_ICONS[p.ballType] || '👑';
+            return `<li><span class="queue-symbol">${icon}</span><span class="queue-name">@${p.playerName}</span></li>`;
+        }).join('');
+
+        const remaining = totalPending - pending.length;
+        if (remaining > 0) {
+            this.els.queueMoreText.textContent = `+ ${remaining} en attente...`;
+            this.els.queueMore.classList.remove('hidden');
+        } else {
+            this.els.queueMore.classList.add('hidden');
+        }
+
+        this.els.queuePanel.classList.add('visible');
     }
 
     /* ---------------- Roue Royale ---------------- */

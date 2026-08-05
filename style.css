@@ -301,6 +301,10 @@ html, body {
 .compact-panel {
     width: 260px;
     padding: 14px 16px;
+    /* Un peu plus transparent que les panneaux historiques (Top Gift /
+       Derniers Lancers) pour laisser mieux voir le plateau derrière. */
+    background: rgba(20, 8, 35, 0.42);
+    backdrop-filter: blur(4px);
 }
 .compact-panel h2 {
     font-size: 17px;
@@ -311,6 +315,32 @@ html, body {
 #ui-jackpot { top: 462px; right: 20px; }
 #ui-event { top: 624px; right: 20px; }
 #ui-boss { top: 786px; right: 20px; }
+#ui-queue { top: 900px; left: 20px; }
+
+.queue-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.queue-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 5px 8px;
+}
+.queue-list li .queue-symbol {
+    font-size: 18px;
+}
+.queue-list li .queue-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .chest-row {
     display: flex;

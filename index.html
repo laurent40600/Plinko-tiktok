@@ -63,6 +63,13 @@
         <ul id="lastdrops-list"><!-- rempli dynamiquement par players.js --></ul>
     </div>
 
+    <!-- ===================== PROCHAINS JOUEURS (file d'attente des billes) ===================== -->
+    <div id="ui-queue" class="ui-layer ui-panel compact-panel dynamic-panel">
+        <h2>🎯 Prochains joueurs</h2>
+        <ul id="queue-list" class="queue-list"><!-- rempli dynamiquement par ballQueueManager.js --></ul>
+        <div id="queue-more" class="panel-subline small hidden"><span id="queue-more-text"></span></div>
+    </div>
+
     <!-- ===================== ZONE MULTIPLICATEURS (buckets) ===================== -->
     <div id="ui-buckets" class="ui-layer">
         <!-- Générés dynamiquement par board.js selon config.js -->
