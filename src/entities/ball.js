@@ -40,6 +40,12 @@ export class BallManager {
             betAmount: 0,
             source: 'local', // 'local' | 'bot' | 'tiktok'
 
+            giftId: null,
+            ballType: 'rose',
+            glowColor: null,
+            symbol: null,
+            trailIntensity: 1,
+
             stuckTimer: 0,
             trail: [],
             landed: false,
@@ -75,6 +81,12 @@ export class BallManager {
         ball.playerAvatar = options.playerAvatar || null;
         ball.betAmount = options.betAmount || CONFIG.ECONOMY.LAUNCH_COST;
         ball.source = options.source || 'local';
+
+        ball.giftId = options.giftId || null;
+        ball.ballType = options.ballType || 'rose';
+        ball.glowColor = options.glowColor || null;
+        ball.symbol = options.symbol || null;
+        ball.trailIntensity = options.trailIntensity || 1;
 
         ball.stuckTimer = 0;
         ball.trail = [];
@@ -116,12 +128,25 @@ export class BallManager {
     _handleBucketLanding(ball) {
         const bucketIndex = this.board.getBucketIndexFromX(ball.x);
         const multiplier = CONFIG.BUCKETS.VALUES[bucketIndex] ?? 1;
-        const winAmount = Math.round(ball.betAmount * multiplier);
         const isJackpot = bucketIndex === CONFIG.BUCKETS.JACKPOT_INDEX;
+
+        // Couche additive purement économique (événements "Double Gains",
+        // "Billes Dorées", "Case Bonus") : ne modifie jamais la case
+        // touchée, la valeur affichée du bucket ni la trajectoire, juste
+        // le gain final versé.
+        const runtime = CONFIG.RUNTIME || {};
+        let payoutMultiplier = runtime.payoutMultiplier || 1;
+        if (bucketIndex === runtime.bonusBucketIndex) {
+            payoutMultiplier *= runtime.bonusBucketMultiplier || 1;
+        }
+        const winAmount = Math.round(ball.betAmount * multiplier * payoutMultiplier);
 
         ball.landed = true;
 
-        this.eventBus.emit('ball:landed', { ball, bucketIndex, multiplier, winAmount, isJackpot });
+        this.eventBus.emit('ball:landed', {
+            ball, bucketIndex, multiplier, winAmount, isJackpot,
+            bonusApplied: payoutMultiplier !== 1
+        });
 
         this.release(ball);
     }

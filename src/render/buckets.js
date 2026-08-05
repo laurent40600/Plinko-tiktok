@@ -162,6 +162,26 @@ function drawBucketPanel(ctx, zone, h, isJackpot) {
     ctx.restore();
 }
 
+function drawBonusBadge(ctx, zone, h) {
+    const width = zone.xEnd - zone.xStart;
+    const bucketY = bucketTopY();
+    const cx = zone.xStart + width / 2;
+    const cy = bucketY - 34;
+    const pulse = 1 + Math.sin(performance.now() / 150) * 0.08;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(pulse, pulse);
+    ctx.font = '900 22px Segoe UI, Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = '#ffd76a';
+    ctx.shadowBlur = 16;
+    ctx.fillStyle = '#ffd76a';
+    ctx.fillText(`⭐ x${CONFIG.RUNTIME?.bonusBucketMultiplier ?? 10}`, 0, 0);
+    ctx.restore();
+}
+
 export function drawBuckets(ctx, board) {
     const h = CONFIG.BUCKETS.HEIGHT;
 
@@ -169,5 +189,8 @@ export function drawBuckets(ctx, board) {
 
     for (const zone of board.bucketZones) {
         drawBucketPanel(ctx, zone, h, zone.index === CONFIG.BUCKETS.JACKPOT_INDEX);
+        if (zone.index === CONFIG.RUNTIME?.bonusBucketIndex) {
+            drawBonusBadge(ctx, zone, h);
+        }
     }
 }

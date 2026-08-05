@@ -1,0 +1,168 @@
+{
+  "_comment": "Catalogue des cadeaux TikTok Live -> billes Royal Plinko. Modifiable sans toucher au code. Les valeurs de plateau (picots/multiplicateurs/probabilités) ne sont JAMAIS pilotées par ce fichier.",
+  "defaultGift": "rose",
+  "gifts": [
+    {
+      "id": "rose",
+      "name": "Rose",
+      "icon": "🌹",
+      "coinValue": 1,
+      "points": 5,
+      "keys": 0,
+      "bossDamage": 1,
+      "ballCount": 1,
+      "ballType": "rose",
+      "priority": 1,
+      "sound": "spawnRose",
+      "effects": ["sparkle"],
+      "specialMoment": null
+    },
+    {
+      "id": "tiktok_coins",
+      "name": "TikTok",
+      "icon": "🪙",
+      "coinValue": 5,
+      "points": 10,
+      "keys": 0,
+      "bossDamage": 2,
+      "ballCount": 1,
+      "ballType": "rose",
+      "priority": 1,
+      "sound": "spawnRose",
+      "effects": ["sparkle"],
+      "specialMoment": null
+    },
+    {
+      "id": "finger_heart",
+      "name": "Finger Heart",
+      "icon": "🫰",
+      "coinValue": 10,
+      "points": 25,
+      "keys": 1,
+      "bossDamage": 4,
+      "ballCount": 2,
+      "ballType": "fingerHeart",
+      "priority": 2,
+      "sound": "spawnCrystal",
+      "effects": ["crystalTrail"],
+      "specialMoment": null
+    },
+    {
+      "id": "perfume",
+      "name": "Perfume",
+      "icon": "💜",
+      "coinValue": 20,
+      "points": 50,
+      "keys": 1,
+      "bossDamage": 6,
+      "ballCount": 2,
+      "ballType": "fingerHeart",
+      "priority": 2,
+      "sound": "spawnCrystal",
+      "effects": ["crystalTrail"],
+      "specialMoment": null
+    },
+    {
+      "id": "gg",
+      "name": "GG",
+      "icon": "🎮",
+      "coinValue": 30,
+      "points": 75,
+      "keys": 2,
+      "bossDamage": 8,
+      "ballCount": 3,
+      "ballType": "fingerHeart",
+      "priority": 3,
+      "sound": "spawnCrystal",
+      "effects": ["crystalTrail", "comboSpark"],
+      "specialMoment": null
+    },
+    {
+      "id": "garland",
+      "name": "Garland",
+      "icon": "💐",
+      "coinValue": 50,
+      "points": 120,
+      "keys": 5,
+      "bossDamage": 15,
+      "ballCount": 4,
+      "ballType": "garland",
+      "priority": 4,
+      "sound": "spawnRoyal",
+      "effects": ["royalAura", "goldTrail"],
+      "specialMoment": null
+    },
+    {
+      "id": "galaxy",
+      "name": "Galaxy",
+      "icon": "🌌",
+      "coinValue": 1000,
+      "points": 400,
+      "keys": 10,
+      "bossDamage": 40,
+      "ballCount": 8,
+      "ballType": "galaxy",
+      "priority": 5,
+      "sound": "spawnGalaxy",
+      "effects": ["cosmicTrail", "starField"],
+      "specialMoment": "galaxyDrop"
+    },
+    {
+      "id": "lion",
+      "name": "Lion",
+      "icon": "🦁",
+      "coinValue": 3000,
+      "points": 600,
+      "keys": 15,
+      "bossDamage": 80,
+      "ballCount": 12,
+      "ballType": "lion",
+      "priority": 6,
+      "sound": "spawnLion",
+      "effects": ["legendaryRoar", "emberTrail"],
+      "specialMoment": "lionRoyal"
+    }
+  ],
+  "ballTypes": {
+    "rose": {
+      "label": "Bille Rose",
+      "color": "#ff4f7a",
+      "glowColor": "rgba(255, 79, 122, 0.85)",
+      "symbol": "🌹",
+      "trailIntensity": 1,
+      "rarity": "normale"
+    },
+    "fingerHeart": {
+      "label": "Bille Cristal",
+      "color": "#b478ff",
+      "glowColor": "rgba(180, 120, 255, 0.9)",
+      "symbol": "🫰",
+      "trailIntensity": 1.3,
+      "rarity": "cristal"
+    },
+    "garland": {
+      "label": "Bille Royale",
+      "color": "#ffd76a",
+      "glowColor": "rgba(255, 215, 106, 0.95)",
+      "symbol": "👑",
+      "trailIntensity": 1.6,
+      "rarity": "royale"
+    },
+    "galaxy": {
+      "label": "Bille Cosmique",
+      "color": "#5ad1ff",
+      "glowColor": "rgba(90, 209, 255, 0.95)",
+      "symbol": "🌌",
+      "trailIntensity": 2,
+      "rarity": "cosmique"
+    },
+    "lion": {
+      "label": "Bille Légendaire",
+      "color": "#ff9d2f",
+      "glowColor": "rgba(255, 157, 47, 1)",
+      "symbol": "🦁",
+      "trailIntensity": 2.4,
+      "rarity": "legendaire"
+    }
+  }
+}

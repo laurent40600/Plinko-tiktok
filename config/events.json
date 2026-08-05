@@ -1,0 +1,75 @@
+{
+  "_comment": "Événements spéciaux déclenchés par la Roue Royale (jackpot débloqué) ou par des cadeaux rares. N'altèrent jamais les picots/positions/probabilités du plateau : uniquement des bonus économiques temporaires et des effets visuels.",
+  "wheel": {
+    "spinDurationMs": 4200,
+    "slowDownStartMs": 2600,
+    "segments": ["double_gains", "pluie_de_billes", "case_bonus", "billes_dorees", "royal_drop"]
+  },
+  "events": [
+    {
+      "id": "double_gains",
+      "label": "Double Gains",
+      "icon": "⏳",
+      "durationSec": 30,
+      "description": "Tous les multiplicateurs sont doublés !",
+      "sound": "eventDoubleGains",
+      "payoutMultiplier": 2
+    },
+    {
+      "id": "pluie_de_billes",
+      "label": "Pluie de Billes",
+      "icon": "🔵",
+      "durationSec": 0,
+      "description": "50 billes tombent en même temps !",
+      "sound": "eventBallRain",
+      "ballRainCount": 50,
+      "ballType": "fingerHeart"
+    },
+    {
+      "id": "case_bonus",
+      "label": "Case Bonus",
+      "icon": "⭐",
+      "durationSec": 25,
+      "description": "Une case x10 apparaît !",
+      "sound": "eventBonusCase",
+      "bonusBucketMultiplier": 10
+    },
+    {
+      "id": "billes_dorees",
+      "label": "Billes Dorées",
+      "icon": "🟡",
+      "durationSec": 20,
+      "description": "Toutes les billes valent x2 !",
+      "sound": "eventGoldenBalls",
+      "payoutMultiplier": 2,
+      "goldenBallSkin": true
+    },
+    {
+      "id": "royal_drop",
+      "label": "Royal Drop",
+      "icon": "🎁",
+      "durationSec": 0,
+      "description": "Événement rare ! 50 billes + effets spectaculaires !",
+      "sound": "eventRoyalDrop",
+      "rare": true,
+      "ballRainCount": 50,
+      "ballType": "garland",
+      "payoutMultiplier": 1.5
+    }
+  ],
+  "specialMoments": {
+    "galaxyDrop": {
+      "label": "Galaxy Drop",
+      "durationSec": 6,
+      "sound": "momentGalaxyDrop",
+      "description": "Transition cosmique, billes cosmiques, particules spatiales."
+    },
+    "lionRoyal": {
+      "label": "Lion Royal",
+      "durationSec": 6,
+      "sound": "momentLionRoyal",
+      "description": "Entrée légendaire, attaque boss, bonus spécial.",
+      "bossBonusDamage": 100
+    }
+  }
+}

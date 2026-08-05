@@ -1,0 +1,23 @@
+{
+  "_comment": "Système de progression communautaire : points d'énergie du Coffre Royal, paliers visuels, et Clés Royales (chemin alternatif vers l'ouverture du coffre).",
+  "community": {
+    "energyGoal": 1000,
+    "startingEnergy": 732,
+    "stages": [
+      { "atPercent": 25, "id": "glow", "label": "Le coffre s'illumine" },
+      { "atPercent": 50, "id": "crack", "label": "Fissures apparaissent" },
+      { "atPercent": 75, "id": "shake", "label": "Le coffre tremble" },
+      { "atPercent": 100, "id": "open", "label": "Le coffre s'ouvre !" }
+    ]
+  },
+  "engagementPoints": {
+    "comment": 1,
+    "likes_per_100": 1,
+    "share": 10,
+    "new_follow": 15
+  },
+  "keys": {
+    "goal": 50,
+    "startingKeys": 34
+  }
+}

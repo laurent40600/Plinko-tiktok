@@ -14,6 +14,7 @@ import { drawLattice, drawPegs } from './board.js';
 import { drawBallTrails, drawBalls } from './balls.js';
 import { drawBuckets } from './buckets.js';
 import { drawParticles } from './particles.js';
+import { drawSpotlight } from './effectsOverlay.js';
 
 export class RenderPipeline {
     /**
@@ -23,8 +24,9 @@ export class RenderPipeline {
      * @param {import('../entities/ball.js').BallManager} deps.ballManager
      * @param {import('../core/camera.js').Camera} deps.camera
      * @param {import('../systems/particles.js').ParticleSystem} deps.particles
+     * @param {import('../systems/effectsManager.js').EffectsManager} [deps.effects]
      */
-    constructor(canvas, { board, ballManager, camera, particles }) {
+    constructor(canvas, { board, ballManager, camera, particles, effects }) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.ctx.imageSmoothingEnabled = true;
@@ -33,6 +35,7 @@ export class RenderPipeline {
         this.ballManager = ballManager;
         this.camera = camera;
         this.particles = particles;
+        this.effects = effects;
     }
 
     /** @param {object} debugFlags - { hitbox, vectors, trajectory } */
@@ -49,6 +52,7 @@ export class RenderPipeline {
         drawBallTrails(ctx, balls, debugFlags.trajectory);
         drawBalls(ctx, balls, debugFlags);
         drawParticles(ctx, this.particles);
+        if (this.effects?.spotlight) drawSpotlight(ctx, this.effects.spotlight);
         this.camera.restoreTransform(ctx);
 
         // Les buckets restent hors transformation caméra : leur zone

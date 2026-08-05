@@ -63,6 +63,9 @@ export const TikTokBridge = {
     onComment(data) {
         eventBus.emit('tiktok:comment', data);
     },
+    onFollow(data) {
+        eventBus.emit('tiktok:follow', data);
+    },
     spawnBall(data) {
         eventBus.emit('game:spawnBall', data);
     }

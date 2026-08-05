@@ -1,18 +1,22 @@
 /* ============================================================
    ROYAL DROP — systems/bots.js
    ------------------------------------------------------------
-   Joueurs virtuels (IA) qui jouent automatiquement pour animer
-   le live même sans spectateurs actifs. Passent par le même
-   point d'entrée que les joueurs réels : 'game:spawnBall'.
+   Joueurs virtuels (IA) qui animent le live même sans viewers
+   actifs. Comme un vrai spectateur, un bot envoie un CADEAU
+   ('tiktok:gift' via TikTokBridge) — jamais un lancer direct :
+   c'est GiftManager qui traduit le cadeau en billes. Ça garde
+   un point d'entrée unique (les cadeaux) pour toute bille, que
+   la source soit un vrai viewer ou cette simulation d'ambiance.
    ============================================================ */
 
 import { CONFIG } from '../core/config.js';
+import { TikTokBridge } from '../core/events.js';
 
-const BASE_BET_BY_PERSONALITY = {
-    prudent: 50,
-    agressif: 300,
-    chanceux: 150,
-    fidele: 100
+const GIFT_WEIGHTS_BY_PERSONALITY = {
+    prudent: { rose: 60, tiktok_coins: 30, finger_heart: 8, perfume: 2 },
+    agressif: { finger_heart: 20, perfume: 20, gg: 25, garland: 25, galaxy: 8, lion: 2 },
+    chanceux: { rose: 20, finger_heart: 15, perfume: 10, gg: 10, garland: 15, galaxy: 20, lion: 10 },
+    fidele: { tiktok_coins: 35, finger_heart: 25, perfume: 20, gg: 15, garland: 5 }
 };
 
 export class Bots {
@@ -34,8 +38,7 @@ export class Bots {
                 name,
                 avatar: null,
                 personality,
-                history: [], // { betAmount, timestamp }
-                baseBet: BASE_BET_BY_PERSONALITY[personality] ?? CONFIG.ECONOMY.LAUNCH_COST
+                history: [] // { giftId, timestamp }
             };
         });
     }
@@ -58,7 +61,7 @@ export class Bots {
         if (!this.isRunning) return;
 
         const bot = this._pickRandomBot();
-        if (bot) this._launchBot(bot);
+        if (bot) this._sendGiftFromBot(bot);
 
         const min = CONFIG.BOTS.SPAWN_INTERVAL_MIN * 1000;
         const max = CONFIG.BOTS.SPAWN_INTERVAL_MAX * 1000;
@@ -72,19 +75,30 @@ export class Bots {
         return this.virtualPlayers[Math.floor(Math.random() * this.virtualPlayers.length)];
     }
 
-    _launchBot(bot) {
-        const betVariation = 0.7 + Math.random() * 0.6; // ±30%
-        const betAmount = Math.round(bot.baseBet * betVariation);
+    _sendGiftFromBot(bot) {
+        const giftId = this._weightedGiftForPersonality(bot.personality);
 
-        this.eventBus.emit('game:spawnBall', {
-            playerName: bot.name,
+        TikTokBridge.onGift({
+            username: bot.name,
             avatar: bot.avatar,
-            betAmount,
-            source: 'bot'
+            giftId,
+            giftCount: 1
         });
 
-        bot.history.push({ betAmount, timestamp: Date.now() });
+        bot.history.push({ giftId, timestamp: Date.now() });
         if (bot.history.length > 20) bot.history.shift();
+    }
+
+    _weightedGiftForPersonality(personality) {
+        const weights = GIFT_WEIGHTS_BY_PERSONALITY[personality] || CONFIG.TIKTOK.GIFT_WEIGHTS;
+        const entries = Object.entries(weights);
+        const total = entries.reduce((sum, [, w]) => sum + w, 0);
+        let roll = Math.random() * total;
+        for (const [id, w] of entries) {
+            roll -= w;
+            if (roll <= 0) return id;
+        }
+        return entries[0]?.[0] || 'rose';
     }
 
     reset() {

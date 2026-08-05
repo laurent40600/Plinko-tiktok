@@ -115,6 +115,41 @@ export const CONFIG = {
         }
     },
 
+    BALL_QUEUE: {
+        MAX_VISIBLE: 5,
+        BURST_MAX_VISIBLE: 10
+    },
+
+    TIKTOK: {
+        // Simulateur de démo : émule des viewers qui envoient des cadeaux
+        // tant qu'aucun vrai flux TikTok Live n'est branché sur
+        // TikTokBridge (voir core/events.js). Mettre à false dès qu'un
+        // vrai connecteur (ex: tiktok-live-connector côté serveur) est
+        // relié via TikTokBridge.onGift/onLike/onShare/onComment.
+        SIMULATOR_ENABLED: true,
+        SIMULATOR_GIFT_INTERVAL_MIN: 3,
+        SIMULATOR_GIFT_INTERVAL_MAX: 9,
+        SIMULATOR_ENGAGEMENT_INTERVAL_MIN: 2,
+        SIMULATOR_ENGAGEMENT_INTERVAL_MAX: 6,
+        VIEWER_NAMES_POOL: [
+            'Emma', 'Lea', 'Tom', 'Lucas', 'Chloe', 'Nico',
+            'Laura', 'Kevin', 'Jules', 'Sarah', 'Hugo', 'Manon',
+            'Yanis', 'Ines', 'Adam', 'Lina'
+        ],
+        // Poids relatifs de tirage par cadeau (id du cadeau -> poids).
+        // Plus le poids est haut, plus le cadeau est fréquent.
+        GIFT_WEIGHTS: {
+            rose: 40,
+            tiktok_coins: 25,
+            finger_heart: 15,
+            perfume: 8,
+            gg: 6,
+            garland: 4,
+            galaxy: 1.5,
+            lion: 0.5
+        }
+    },
+
     BOTS: {
         ENABLED: true,
         SPAWN_INTERVAL_MIN: 4,

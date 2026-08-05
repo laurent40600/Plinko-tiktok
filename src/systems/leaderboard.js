@@ -18,7 +18,14 @@ export class Leaderboard {
         this.entries = initialEntries;
 
         eventBus.on('ball:landed', (data) => this._onBallLanded(data));
-        eventBus.on('tiktok:gift', (data) => this._onGiftReceived(data));
+        eventBus.on('gift:processed', (data) => this._onGiftReceived(data));
+        eventBus.on('jackpot:coronation', (data) => this._onCoronation(data));
+    }
+
+    /** Le vainqueur du Jackpot déverrouillé reçoit le pool progressif comme bonus de classement. */
+    _onCoronation({ playerName, poolValue }) {
+        if (!playerName) return;
+        this._addValue(playerName, null, poolValue || 0);
     }
 
     /** Seuls les gains positifs comptent (un x0.5 ne fait pas progresser le rang). */
@@ -27,7 +34,7 @@ export class Leaderboard {
         this._addValue(ball.playerName, ball.playerAvatar, winAmount);
     }
 
-    /** Futur hook TikTok Live : un cadeau alimente directement le classement. */
+    /** Un cadeau (résolu par GiftManager) alimente aussi directement le classement "TOP GIFT". */
     _onGiftReceived(data) {
         if (!data?.username) return;
         this._addValue(data.username, data.avatar, data.giftValue || 0);

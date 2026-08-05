@@ -11,7 +11,7 @@
    les utilisateurs déjà installés.
    ============================================================ */
 
-const CACHE_VERSION = 'royal-drop-v3.0.2';
+const CACHE_VERSION = 'royal-drop-v3.1.0';
 const CACHE_NAME = `royal-drop-cache-${CACHE_VERSION}`;
 
 // Liste de tous les fichiers essentiels au fonctionnement hors ligne.
@@ -26,6 +26,7 @@ const ASSETS_TO_CACHE = [
     './src/main.js',
     './src/core/camera.js',
     './src/core/config.js',
+    './src/core/configManager.js',
     './src/core/engine.js',
     './src/core/events.js',
     './src/core/storage.js',
@@ -36,19 +37,40 @@ const ASSETS_TO_CACHE = [
     './src/render/balls.js',
     './src/render/board.js',
     './src/render/buckets.js',
+    './src/render/effectsOverlay.js',
     './src/render/frame.js',
     './src/render/imageCache.js',
     './src/render/particles.js',
     './src/render/pipeline.js',
     './src/render/shapes.js',
     './src/systems/audio.js',
+    './src/systems/ballQueueManager.js',
+    './src/systems/bossManager.js',
     './src/systems/bots.js',
+    './src/systems/comboManager.js',
+    './src/systems/communityManager.js',
+    './src/systems/effectsManager.js',
+    './src/systems/eventManager.js',
     './src/systems/gameFeel.js',
+    './src/systems/giftManager.js',
+    './src/systems/jackpotManager.js',
+    './src/systems/keysManager.js',
     './src/systems/leaderboard.js',
     './src/systems/particles.js',
     './src/systems/physics.js',
     './src/systems/players.js',
+    './src/systems/tiktokManager.js',
+    './src/systems/voiceManager.js',
     './src/ui/hud.js',
+    './src/ui/showUI.js',
+
+    './config/animations.json',
+    './config/boss.json',
+    './config/events.json',
+    './config/gifts.json',
+    './config/jackpot.json',
+    './config/levels.json',
+    './config/sounds.json',
 
     './assets/icons/icon-192.png',
     './assets/icons/icon-512.png',

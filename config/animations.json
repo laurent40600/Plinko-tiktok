@@ -1,0 +1,36 @@
+{
+  "_comment": "Durées/paramètres des transitions UI et scènes spéciales (en millisecondes sauf indication contraire).",
+  "banner": {
+    "showMs": 260,
+    "holdMs": 3200,
+    "hideMs": 320
+  },
+  "panelPulse": {
+    "showMs": 300,
+    "holdMs": 4500,
+    "hideMs": 400
+  },
+  "wheelScene": {
+    "fadeInMs": 400,
+    "fadeOutMs": 500
+  },
+  "coronation": {
+    "fadeInMs": 500,
+    "crownDropMs": 900,
+    "coinRainMs": 2500,
+    "fadeOutMs": 600
+  },
+  "chest": {
+    "crackShakeMs": 400,
+    "openBurstMs": 1200
+  },
+  "boss": {
+    "entranceSlideMs": 700,
+    "hpBarEaseMs": 350,
+    "defeatShakeMs": 900
+  },
+  "combo": {
+    "popMs": 220,
+    "holdMs": 1400
+  }
+}

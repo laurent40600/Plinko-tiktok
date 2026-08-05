@@ -1,0 +1,17 @@
+{
+  "_comment": "Boss communautaire, visible uniquement pendant les événements Royal Drop / Galaxy Drop ou déclenché manuellement.",
+  "enabled": true,
+  "maxHp": 6000,
+  "spawnTriggers": ["royal_drop", "galaxy_drop_streak"],
+  "entrance": {
+    "durationSec": 3,
+    "sound": "bossEntrance"
+  },
+  "defeat": {
+    "durationSec": 4,
+    "sound": "bossDefeat",
+    "rewardBallRainCount": 30,
+    "rewardBallType": "garland"
+  },
+  "hitSound": "bossHit"
+}

@@ -104,6 +104,19 @@ export class AudioEngine {
         this.playTone(1000, 0.05, 'square', 0.3);
     }
 
+    /** Joue un son nommé défini dans /config/sounds.json (séquence de tons synthétisés). */
+    playNamed(soundId) {
+        if (!soundId || !this.ctx) return;
+        const sound = CONFIG.SOUNDS?.[soundId];
+        if (!sound || !Array.isArray(sound.notes)) return;
+
+        let offsetMs = 0;
+        for (const note of sound.notes) {
+            setTimeout(() => this.playTone(note.freq, note.dur, note.type, note.vol), offsetMs);
+            offsetMs += note.dur * 600; // léger chevauchement entre notes pour un rendu plus riche
+        }
+    }
+
     isAvailable() {
         return !!(window.AudioContext || window.webkitAudioContext);
     }

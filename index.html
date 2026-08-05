@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>ROYAL DROP - Plinko Premium</title>
+<title>ROYAL PLINKO LIVE - Émission TV Interactive</title>
 
 <!-- ===================== PWA ===================== -->
 <link rel="manifest" href="manifest.json">
@@ -68,6 +68,69 @@
         <!-- Générés dynamiquement par board.js selon config.js -->
     </div>
 
+    <!-- ===================== BANNIÈRE "DERNIÈRE ACTION VIEWER" (dynamique) ===================== -->
+    <div id="ui-viewer-banner" class="ui-layer dynamic-panel banner-panel">
+        <span id="viewer-banner-text">👑 En attente de cadeaux...</span>
+    </div>
+
+    <!-- ===================== COFFRE ROYAL (objectif communautaire, toujours visible) ===================== -->
+    <div id="ui-chest" class="ui-layer ui-panel compact-panel">
+        <h2>👑 Coffre Royal</h2>
+        <div class="meter"><div id="chest-fill" class="meter-fill gold"></div></div>
+        <div class="panel-subline"><span id="chest-value">0 / 1000</span><span id="chest-stage">Verrouillé</span></div>
+        <div class="panel-subline small"><span>🔑 Clés</span><span id="keys-value">0 / 50</span></div>
+    </div>
+
+    <!-- ===================== JACKPOT PROGRESSIF (toujours visible) ===================== -->
+    <div id="ui-jackpot" class="ui-layer ui-panel compact-panel">
+        <h2>💎 Jackpot Progressif</h2>
+        <div id="jackpot-value" class="jackpot-value">0</div>
+        <div class="panel-subline"><span id="jackpot-multiplier">x100</span><span id="jackpot-lock">🔒 Verrouillé</span></div>
+    </div>
+
+    <!-- ===================== ÉVÉNEMENT SPÉCIAL EN COURS (dynamique) ===================== -->
+    <div id="ui-event" class="ui-layer ui-panel compact-panel dynamic-panel">
+        <h2 id="event-icon-label">⭐ Événement</h2>
+        <p id="event-description"></p>
+    </div>
+
+    <!-- ===================== BOSS COMMUNAUTAIRE (dynamique, visible pendant les events) ===================== -->
+    <div id="ui-boss" class="ui-layer ui-panel compact-panel dynamic-panel">
+        <h2>⚔️ Boss Communautaire</h2>
+        <div class="meter"><div id="boss-fill" class="meter-fill red"></div></div>
+        <div class="panel-subline"><span id="boss-hp">0 / 0</span></div>
+    </div>
+
+    <!-- ===================== COMBO (dynamique) ===================== -->
+    <div id="ui-combo" class="ui-layer dynamic-panel combo-chip">
+        <span id="combo-count">x1</span> COMBO
+    </div>
+
+    <!-- ===================== ROUE ROYALE DES ÉVÉNEMENTS (scène plein écran) ===================== -->
+    <div id="ui-wheel-scene" class="ui-layer scene-overlay hidden">
+        <div class="scene-content">
+            <h1>👑 ROUE ROYALE</h1>
+            <div id="wheel-graphic" class="wheel-graphic">
+                <div id="wheel-dial" class="wheel-dial"></div>
+                <div class="wheel-pointer">▼</div>
+            </div>
+            <p id="wheel-result-label" class="scene-result"></p>
+        </div>
+    </div>
+
+    <!-- ===================== COURONNEMENT DU GAGNANT (scène plein écran) ===================== -->
+    <div id="ui-coronation-scene" class="ui-layer scene-overlay hidden">
+        <div class="scene-content">
+            <div class="crown-drop">👑</div>
+            <h1>NOUVEAU ROI DU ROYAUME</h1>
+            <p id="coronation-name" class="scene-winner-name"></p>
+            <p id="coronation-amount" class="scene-result"></p>
+        </div>
+    </div>
+
+    <!-- ===================== FLASH / SHAKE (effets plein écran) ===================== -->
+    <div id="ui-screen-flash"></div>
+
     <!-- ===================== MENU DEBUG (caché par défaut, touche D) ===================== -->
     <div id="ui-debug" class="ui-layer hidden">
         <div id="debug-content">
@@ -85,7 +148,7 @@
     <!-- ===================== ÉCRAN DE CHARGEMENT ===================== -->
     <div id="loading-screen">
         <div id="loading-crown">👑</div>
-        <p>Chargement de ROYAL DROP...</p>
+        <p>Chargement de ROYAL PLINKO LIVE...</p>
     </div>
 
 </div>

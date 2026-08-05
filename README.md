@@ -1,6 +1,9 @@
-# 👑 ROYAL DROP
+# 👑 ROYAL PLINKO LIVE
 
-Jeu Plinko premium autonome pour lives TikTok — thème Royal, jackpots animés, classement en temps réel, joueurs virtuels (IA), et architecture prête pour une future connexion TikTok Live.
+Émission TV interactive Royal Plinko pour lives TikTok — le même plateau Plinko (picots,
+multiplicateurs, physique) qu'avant, habillé en spectacle complet : cadeaux TikTok -> billes,
+Coffre Royal, Jackpot progressif + Roue Royale, boss communautaire, couronnement du gagnant,
+réactions vocales, et architecture prête pour une connexion TikTok Live réelle.
 
 Fonctionne 100% hors ligne, installable en PWA sur iPhone, iPad, Android et PC.
 
@@ -93,16 +96,49 @@ Créer une nouvelle méthode dédiée dans `audio.js` en suivant le modèle de `
 
 ---
 
-## 🔌 Connexion TikTok Live (future)
+## 👑 ROYAL PLINKO LIVE — couche "émission TV" (architecture v3, `src/`)
 
-L'architecture est **déjà prête** pour recevoir des événements TikTok Live sans refonte :
+Le plateau, la physique et les buckets (`src/entities/board.js`, `src/systems/physics.js`,
+`CONFIG.BOARD` / `CONFIG.BUCKETS`) restent **strictement identiques** à Royal Drop —
+aucune valeur de jeu n'a changé. Par-dessus, une couche "émission TV interactive"
+traduit les cadeaux TikTok Live en billes et pilote tout le spectacle autour :
 
-- `js/events.js` contient `TikTokAPI.onGift()`, `onLike()`, `onShare()`, `onComment()`, `spawnBall()`.
-- Ces fonctions sont actuellement vides mais câblées à l'`EventBus` interne.
-- Pour connecter une vraie source TikTok Live (ex: via une librairie tierce ou un backend qui écoute le live) :
-  1. Créer un nouveau fichier `js/tiktok-bridge.js`.
-  2. Appeler `TikTokAPI.onGift(data)`, `TikTokAPI.spawnBall(data)`, etc. depuis ce fichier à chaque événement reçu.
-  3. Aucune autre partie du jeu n'a besoin d'être modifiée : `players.js`, `leaderboard.js` et `bots.js` écoutent déjà l'`EventBus`.
+| Module | Rôle |
+|---|---|
+| `src/core/configManager.js` | Charge `/config/*.json` au démarrage dans `CONFIG` |
+| `src/systems/tiktokManager.js` | Point d'entrée du flux TikTok Live (+ simulateur de démo) |
+| `src/systems/giftManager.js` | Cadeau -> N billes (skin/couleur/priorité selon le cadeau) |
+| `src/systems/ballQueueManager.js` | Ne laisse jamais plus de 5 billes visibles à la fois |
+| `src/systems/communityManager.js` / `keysManager.js` | Coffre Royal (énergie + clés) |
+| `src/systems/jackpotManager.js` | Jackpot progressif, verrouillage, mode cinématique, Roue Royale |
+| `src/systems/eventManager.js` | Double Gains, Pluie de Billes, Case Bonus, Billes Dorées, Royal Drop... |
+| `src/systems/bossManager.js` / `comboManager.js` | Boss communautaire + jauge de combo |
+| `src/systems/effectsManager.js` | Ralenti, caméra cinématique, spotlight, particules |
+| `src/systems/voiceManager.js` | Réactions vocales humaines (Web Speech API) |
+| `src/ui/showUI.js` | Panneaux dynamiques (80% spectacle / 20% info) |
+
+### Contenu éditorial (`/config/*.json`)
+
+Tout ce qui définit les cadeaux, événements, jackpot, boss, sons et niveaux se modifie
+**sans toucher au code** : `gifts.json`, `events.json`, `jackpot.json`, `boss.json`,
+`sounds.json`, `animations.json`, `levels.json`.
+
+### Connexion TikTok Live réelle
+
+`src/core/events.js` expose `TikTokBridge.onGift/onLike/onShare/onComment/onFollow(data)`,
+câblés à l'`EventBus` interne — c'est le seul point d'entrée dont un vrai backend a besoin :
+
+1. Mettre `CONFIG.TIKTOK.SIMULATOR_ENABLED = false` dans `src/core/config.js` (ou appeler
+   `tiktokManager.connect()`, qui coupe le simulateur automatiquement).
+2. Depuis le backend qui écoute le live (ex: une librairie tierce côté serveur + WebSocket),
+   appeler `TikTokBridge.onGift({ username, avatar, giftId, giftCount })` à chaque cadeau reçu
+   (`giftId` doit correspondre à un `id` de `config/gifts.json`).
+3. Rien d'autre n'a besoin d'être modifié : `GiftManager`, `CommunityManager`, `KeysManager`,
+   `BossManager`, `ComboManager` et le classement écoutent déjà l'`EventBus`.
+
+En attendant un vrai flux, `src/systems/tiktokManager.js` simule des viewers qui envoient des
+cadeaux, et `src/systems/bots.js` simule des viewers d'ambiance (eux aussi via de vrais cadeaux
+simulés) — le jeu tourne donc seul dès l'ouverture, sans aucun bouton de lancer manuel.
 
 ---
 

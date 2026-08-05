@@ -291,6 +291,244 @@ html, body {
 }
 
 /* ============================================================
+   ROYAL PLINKO LIVE — habillage spectacle
+   Panneaux compacts toujours visibles (Coffre Royal, Jackpot),
+   panneaux dynamiques qui n'apparaissent que le temps d'un
+   moment fort (bannière viewer, événement, boss, combo), et
+   scènes plein écran (Roue Royale, Couronnement).
+   ============================================================ */
+
+.compact-panel {
+    width: 260px;
+    padding: 14px 16px;
+}
+.compact-panel h2 {
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+#ui-chest { top: 300px; right: 20px; }
+#ui-jackpot { top: 462px; right: 20px; }
+#ui-event { top: 624px; right: 20px; }
+#ui-boss { top: 786px; right: 20px; }
+
+.meter {
+    width: 100%;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 215, 106, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.meter-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+.meter-fill.gold { background: linear-gradient(90deg, #b478ff, #ffd76a); }
+.meter-fill.red { background: linear-gradient(90deg, #ff2d78, #ff9d2f); }
+
+.panel-subline {
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    font-size: 15px;
+    margin-top: 8px;
+}
+.panel-subline.small {
+    font-size: 13px;
+    color: #d8c6f5;
+    margin-top: 4px;
+}
+
+.jackpot-value {
+    color: #ffd76a;
+    font-size: 30px;
+    font-weight: 900;
+    text-shadow: 0 0 12px rgba(255, 215, 106, 0.8);
+    letter-spacing: 1px;
+}
+
+#event-description {
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+/* ============================================================
+   Panneaux dynamiques : apparaissent/disparaissent selon les
+   événements du jeu, jamais affichés en permanence.
+   ============================================================ */
+.dynamic-panel {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+.dynamic-panel.visible {
+    opacity: 1;
+}
+
+.panel-pulse {
+    animation: panel-pulse-anim 0.5s ease;
+}
+@keyframes panel-pulse-anim {
+    0% { box-shadow: 0 0 0 rgba(255, 215, 106, 0); }
+    40% { box-shadow: 0 0 28px rgba(255, 215, 106, 0.9); }
+    100% { box-shadow: 0 0 0 rgba(255, 215, 106, 0); }
+}
+
+/* ============================================================
+   Bannière "dernière action viewer"
+   ============================================================ */
+#ui-viewer-banner {
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    background: rgba(20, 8, 35, 0.82);
+    border: 1px solid rgba(255, 215, 106, 0.45);
+    border-radius: 30px;
+    padding: 10px 24px;
+    color: #fff;
+    font-size: 19px;
+    font-weight: 600;
+    text-align: center;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+#ui-viewer-banner.visible {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================================
+   Combo
+   ============================================================ */
+#ui-combo {
+    top: 260px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.6);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    color: #ffd76a;
+    font-size: 26px;
+    font-weight: 900;
+    text-shadow: 0 0 16px rgba(255, 215, 106, 0.9);
+    letter-spacing: 1px;
+}
+#ui-combo.visible {
+    transform: translateX(-50%) scale(1);
+}
+
+/* ============================================================
+   Scènes plein écran (Roue Royale / Couronnement)
+   ============================================================ */
+.scene-overlay {
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(5, 1, 10, 0.86);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.scene-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+.scene-content {
+    text-align: center;
+    color: #fff;
+}
+.scene-content h1 {
+    color: #ffd76a;
+    font-size: 40px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 24px rgba(255, 215, 106, 0.8);
+    margin-bottom: 20px;
+}
+.scene-result {
+    font-size: 26px;
+    color: #ffd76a;
+    margin-top: 16px;
+    font-weight: 700;
+}
+.scene-winner-name {
+    font-size: 46px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(180, 120, 255, 0.9);
+}
+.crown-drop {
+    font-size: 100px;
+    animation: crown-drop-anim 0.9s ease;
+}
+@keyframes crown-drop-anim {
+    0% { transform: translateY(-200px) scale(0.4); opacity: 0; }
+    70% { transform: translateY(10px) scale(1.1); opacity: 1; }
+    100% { transform: translateY(0) scale(1); }
+}
+
+.wheel-graphic {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: conic-gradient(#b81fe0, #2f8fe8, #2fd66a, #ffd76a, #b81fe0, #2f8fe8, #2fd66a, #ffd76a);
+    border: 6px solid #ffd76a;
+    box-shadow: 0 0 40px rgba(255, 215, 106, 0.7);
+}
+.wheel-dial {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transition: transform 4s cubic-bezier(0.15, 0.85, 0.25, 1);
+    transform: rotate(0deg);
+}
+.wheel-pointer {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffd76a;
+    font-size: 30px;
+    text-shadow: 0 0 10px rgba(255, 215, 106, 0.9);
+}
+
+/* ============================================================
+   Flash / tremblement d'écran (moments forts)
+   ============================================================ */
+#ui-screen-flash {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #ffd76a;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 600;
+}
+#ui-screen-flash.flash {
+    animation: screen-flash-anim 0.4s ease-out;
+}
+@keyframes screen-flash-anim {
+    0% { opacity: 0.55; }
+    100% { opacity: 0; }
+}
+#game-root.shake {
+    animation: screen-shake-anim 0.4s ease;
+}
+@keyframes screen-shake-anim {
+    0%, 100% { margin-left: 0; margin-top: 0; }
+    20% { margin-left: -10px; margin-top: 6px; }
+    40% { margin-left: 8px; margin-top: -8px; }
+    60% { margin-left: -6px; margin-top: 4px; }
+    80% { margin-left: 6px; margin-top: -4px; }
+}
+
+/* ============================================================
    UTILITAIRES
    ============================================================ */
 .hidden {

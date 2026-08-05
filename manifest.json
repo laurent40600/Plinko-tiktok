@@ -1,7 +1,7 @@
 {
-  "name": "ROYAL DROP",
-  "short_name": "RoyalDrop",
-  "description": "Jeu Plinko premium pour lives TikTok — plateau royal, jackpots et classement en temps réel.",
+  "name": "ROYAL PLINKO LIVE",
+  "short_name": "RoyalPlinko",
+  "description": "Émission TV interactive Royal Plinko pour lives TikTok — plateau royal, jackpots, boss et classement en temps réel.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

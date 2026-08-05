@@ -1,0 +1,26 @@
+{
+  "_comment": "Jackpot progressif (habillage/spectacle). Le paiement réel d'une bille tombée dans la case JACKPOT reste calculé uniquement à partir de CONFIG.BUCKETS (inchangé). Ce fichier pilote seulement l'affichage 'JACKPOT PROGRESSIF' et la mise en scène (roue + couronnement).",
+  "progressivePool": {
+    "startingValue": 26750,
+    "displayMultiplier": 100,
+    "contributionPerGift": 0.02,
+    "currencyIcon": "🪙"
+  },
+  "lock": {
+    "startsLocked": true,
+    "unlockDurationSec": 60,
+    "unlockMaxJackpotHits": 5
+  },
+  "cinematic": {
+    "approachDistancePx": 260,
+    "slowMotionTimeScale": 0.35,
+    "slowMotionRampMs": 500,
+    "cameraZoom": 1.55,
+    "spotlightRadiusPx": 220
+  },
+  "coronation": {
+    "durationSec": 6,
+    "title": "👑 NOUVEAU ROI DU ROYAUME",
+    "sound": "coronationFanfare"
+  }
+}

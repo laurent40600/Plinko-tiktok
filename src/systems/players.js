@@ -30,14 +30,20 @@ export class Players {
         eventBus.on('ball:landed', (data) => this._onBallLanded(data));
     }
 
-    /** Point d'entrée unique pour tout lancer : cadeau spectateur (à venir), bot, ou test. */
+    /** Point d'entrée unique pour tout lancer : cadeau spectateur, événement spécial, ou test local. */
     _onSpawnRequest(data) {
         this.ballManager.spawn({
             playerName: data.playerName || 'Joueur',
             playerAvatar: data.avatar || null,
             betAmount: data.betAmount || CONFIG.ECONOMY.LAUNCH_COST,
             source: data.source || 'local',
-            skin: this.getEquippedSkin()
+            skin: data.source === 'local' ? this.getEquippedSkin() : (data.ballType || 'default'),
+            giftId: data.giftId || null,
+            ballType: data.ballType || 'rose',
+            color: data.color,
+            glowColor: data.glowColor,
+            symbol: data.symbol,
+            trailIntensity: data.trailIntensity
         });
 
         this.audio.playLaunch();
