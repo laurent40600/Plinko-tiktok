@@ -4,9 +4,11 @@
    "Énergie du Coffre Royal" : objectif communautaire alimenté
    par l'engagement (commentaires, likes, partages, follows) et
    par la valeur en points de chaque cadeau. Paliers visuels à
-   25/50/75/100% (voir /config/levels.json). À 100%, le coffre
-   s'ouvre : JackpotManager écoute 'community:chestOpen' pour
-   déverrouiller la case JACKPOT pour une fenêtre de temps.
+   25/50/75/100% (voir /config/levels.json). Le coffre ne s'ouvre
+   réellement (déverrouillage du Jackpot) que lorsque l'énergie
+   (ou les clés) ET un minimum de billes jouées sont atteints —
+   ça évite qu'un cycle s'ouvre après seulement quelques gros
+   cadeaux, sans que le live ait vraiment "joué".
    ============================================================ */
 
 import { CONFIG } from '../core/config.js';
@@ -20,7 +22,10 @@ export class CommunityManager {
         this.goal = cfg.energyGoal || 1000;
         this.energy = cfg.startingEnergy || 0;
         this.stages = cfg.stages || [];
+        this.minBallsToOpen = cfg.minBallsToOpen ?? 1000;
+        this.ballsLanded = 0;
         this.chestOpen = false;
+        this._energyReady = false;
         this.currentStageId = this._stageForPercent(this._percent());
 
         eventBus.on('tiktok:comment', () => this._addPoints(this._points('comment')));
@@ -28,6 +33,7 @@ export class CommunityManager {
         eventBus.on('tiktok:share', () => this._addPoints(this._points('share')));
         eventBus.on('tiktok:follow', () => this._addPoints(this._points('new_follow')));
         eventBus.on('gift:processed', (data) => this._addPoints((data.gift?.points || 0) * (data.giftCount || 1)));
+        eventBus.on('ball:landed', () => this._onBallLanded());
         eventBus.on('keys:goalReached', () => this._forceOpen());
         eventBus.on('jackpot:relocked', () => this._resetCycle());
 
@@ -50,6 +56,13 @@ export class CommunityManager {
         return current?.id || null;
     }
 
+    _onBallLanded() {
+        if (this.chestOpen) return;
+        this.ballsLanded++;
+        this._emitUpdate();
+        this._tryOpenChest();
+    }
+
     _addPoints(amount) {
         if (!amount || this.chestOpen) return;
 
@@ -62,16 +75,24 @@ export class CommunityManager {
             this.eventBus.emit('community:stageChanged', { stageId: newStage, percent });
         }
 
-        this._emitUpdate();
+        if (percent >= 100) this._energyReady = true;
 
-        if (percent >= 100) this._openChest();
+        this._emitUpdate();
+        this._tryOpenChest();
     }
 
     _forceOpen() {
         this.energy = this.goal;
         this.currentStageId = this._stageForPercent(100);
+        this._energyReady = true;
         this._emitUpdate();
-        this._openChest();
+        this._tryOpenChest();
+    }
+
+    /** N'ouvre le coffre que si l'énergie/les clés ET le minimum de billes sont réunis. */
+    _tryOpenChest() {
+        if (this.chestOpen || !this._energyReady) return;
+        if (this.ballsLanded >= this.minBallsToOpen) this._openChest();
     }
 
     _openChest() {
@@ -83,6 +104,8 @@ export class CommunityManager {
     _resetCycle() {
         this.chestOpen = false;
         this.energy = 0;
+        this.ballsLanded = 0;
+        this._energyReady = false;
         this.currentStageId = this._stageForPercent(0);
         this._emitUpdate();
     }
@@ -93,11 +116,22 @@ export class CommunityManager {
             goal: this.goal,
             percent: this._percent(),
             stageId: this.currentStageId,
-            chestOpen: this.chestOpen
+            chestOpen: this.chestOpen,
+            ballsLanded: this.ballsLanded,
+            minBallsToOpen: this.minBallsToOpen,
+            energyReady: this._energyReady
         });
     }
 
     getState() {
-        return { energy: Math.round(this.energy), goal: this.goal, percent: this._percent(), stageId: this.currentStageId, chestOpen: this.chestOpen };
+        return {
+            energy: Math.round(this.energy),
+            goal: this.goal,
+            percent: this._percent(),
+            stageId: this.currentStageId,
+            chestOpen: this.chestOpen,
+            ballsLanded: this.ballsLanded,
+            minBallsToOpen: this.minBallsToOpen
+        };
     }
 }

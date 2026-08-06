@@ -75,6 +75,14 @@
         <!-- Générés dynamiquement par board.js selon config.js -->
     </div>
 
+    <!-- ===================== ROI DU ROYAUME (persistant, sous les multiplicateurs) ===================== -->
+    <div id="ui-current-king" class="ui-layer current-king-bar hidden">
+        <span class="king-crown">👑</span>
+        <span class="king-label">Roi du Royaume</span>
+        <span class="king-name" id="king-name">—</span>
+        <span class="king-points" id="king-points"></span>
+    </div>
+
     <!-- ===================== BANNIÈRE "DERNIÈRE ACTION VIEWER" (dynamique) ===================== -->
     <div id="ui-viewer-banner" class="ui-layer dynamic-panel banner-panel">
         <span id="viewer-banner-text">👑 En attente de cadeaux...</span>
@@ -127,8 +135,15 @@
     <div id="ui-wheel-scene" class="ui-layer scene-overlay hidden">
         <div class="scene-content">
             <h1>👑 ROUE ROYALE</h1>
+            <!-- Le cadre (couronne, anneau doré, gemmes, runes) reste FIXE ;
+                 seul le disque des 5 secteurs tourne dessous, comme une vraie
+                 roue de jeu. Les deux images sont découpées de la même
+                 illustration, le raccord est donc invisible. -->
             <div id="wheel-graphic" class="wheel-graphic">
-                <img id="wheel-dial" class="wheel-dial" src="assets/icons/wheel/royal-wheel.png" alt="">
+                <div class="wheel-disc-holder">
+                    <img id="wheel-dial" class="wheel-dial" src="assets/icons/wheel/royal-wheel-disc.png" alt="">
+                </div>
+                <img class="wheel-frame" src="assets/icons/wheel/royal-wheel-frame.png" alt="">
                 <div class="wheel-pointer">▼</div>
             </div>
             <p id="wheel-result-label" class="scene-result"></p>

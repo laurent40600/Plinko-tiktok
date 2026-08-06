@@ -230,6 +230,53 @@ html, body {
 }
 
 /* ============================================================
+   ROI DU ROYAUME — bandeau horizontal persistant sous les buckets,
+   affiché dès le premier couronnement et jamais masqué automatiquement :
+   il ne change que lorsqu'un nouveau roi est couronné.
+   ============================================================ */
+#ui-current-king {
+    bottom: 130px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(90deg, rgba(20, 8, 35, 0.6), rgba(70, 25, 100, 0.6), rgba(20, 8, 35, 0.6));
+    border: 1px solid rgba(255, 215, 106, 0.45);
+    border-radius: 40px;
+    padding: 10px 28px;
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.45);
+    white-space: nowrap;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.king-crown {
+    font-size: 24px;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 106, 0.8));
+}
+.king-label {
+    color: #d8c6f5;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.king-name {
+    color: #ffd76a;
+    font-weight: 800;
+    font-size: 21px;
+    text-shadow: 0 0 10px rgba(255, 215, 106, 0.7);
+}
+.king-points {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+}
+.king-points::before {
+    content: '•';
+    margin-right: 10px;
+    color: #d8c6f5;
+}
+
+/* ============================================================
    MENU DEBUG
    ============================================================ */
 #ui-debug {
@@ -562,29 +609,57 @@ html, body {
     100% { transform: translateY(0) scale(1); }
 }
 
+/* Roue Royale : boîte au ratio exact de l'illustration du cadre (736x879),
+   pour que les pourcentages ci-dessous tombent pile sur le centre du cercle. */
 .wheel-graphic {
     position: relative;
-    width: 300px;
-    height: 335px;
+    width: 620px;
+    aspect-ratio: 736 / 879;
     margin: 0 auto;
-    filter: drop-shadow(0 0 30px rgba(180, 120, 255, 0.6));
+}
+/* Halo statique en fond, séparé de l'image qui tourne : un filter:
+   drop-shadow() sur l'élément en rotation se redessine à chaque frame
+   et donne une ombre étirée/déformée pendant le spin — d'où le rendu
+   "sale" précédent. Un halo radial fixe derrière évite ce problème. */
+.wheel-graphic::before {
+    content: '';
+    position: absolute;
+    inset: -30px;
+    background: radial-gradient(circle, rgba(180, 120, 255, 0.45) 0%, rgba(180, 120, 255, 0) 68%);
+    z-index: -1;
+}
+/* Centre du cercle mesuré sur l'illustration : (367, 489) sur 736x879,
+   disque intérieur de rayon 282 -> 76.63% de la largeur du cadre. Le
+   holder porte le centrage, l'image ne porte QUE la rotation (le JS
+   écrase transform à chaque frame, il ne doit pas écraser le centrage). */
+.wheel-disc-holder {
+    position: absolute;
+    left: 49.864%;
+    top: 55.631%;
+    width: 76.630%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
 }
 .wheel-dial {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+}
+.wheel-frame {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    transition: transform 4s cubic-bezier(0.15, 0.85, 0.25, 1);
-    transform: rotate(0deg);
+    pointer-events: none;
 }
 .wheel-pointer {
     position: absolute;
-    top: -6px;
-    left: 50%;
+    top: 19.5%;
+    left: 49.864%;
     transform: translateX(-50%);
     color: #ffd76a;
-    font-size: 26px;
+    font-size: 42px;
     text-shadow: 0 0 10px rgba(255, 215, 106, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8);
     z-index: 2;
 }

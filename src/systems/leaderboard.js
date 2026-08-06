@@ -22,10 +22,13 @@ export class Leaderboard {
         eventBus.on('jackpot:coronation', (data) => this._onCoronation(data));
     }
 
-    /** Le vainqueur du Jackpot déverrouillé reçoit le pool progressif comme bonus de classement. */
+    /** Le vainqueur du Jackpot déverrouillé reçoit le pool progressif comme bonus de classement,
+        et devient le "Roi du Royaume" affiché en permanence jusqu'au prochain couronnement. */
     _onCoronation({ playerName, poolValue }) {
         if (!playerName) return;
         this._addValue(playerName, null, poolValue || 0);
+        const entry = this.entries.find(e => e.name === playerName);
+        this.eventBus.emit('leaderboard:kingCrowned', { playerName, totalValue: entry?.totalValue || 0 });
     }
 
     /** Seuls les gains positifs comptent (un x0.5 ne fait pas progresser le rang). */
@@ -52,6 +55,10 @@ export class Leaderboard {
 
         this.entries.sort((a, b) => b.totalValue - a.totalValue);
         this.eventBus.emit('leaderboard:updated', this.getTopEntries());
+        // Diffusé pour CHAQUE joueur (pas seulement le top 3) : permet par
+        // exemple au bandeau "Roi du Royaume" de suivre son total en direct
+        // même s'il sort du top 3 affiché dans le panneau TOP GIFT.
+        this.eventBus.emit('leaderboard:entryUpdated', { name, totalValue: entry.totalValue });
     }
 
     getTopEntries() {

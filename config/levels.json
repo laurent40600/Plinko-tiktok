@@ -1,13 +1,30 @@
 {
-  "_comment": "Système de progression communautaire : points d'énergie du Coffre Royal, paliers visuels, et Clés Royales (chemin alternatif vers l'ouverture du coffre). energyGoal/keys.goal calibrés par simulation (100k+ billes, voir /docs ou le rapport de session) pour un coffre qui s'ouvre en moyenne toutes les ~10 min sur un live actif, avec une contribution énergie/clés quasi égale (50/50) — ce ne sont pas les valeurs de la maquette de référence (732/1000, 34/50), qui n'étaient qu'un exemple d'illustration statique.",
+  "_comment": "Système de progression communautaire : énergie du Coffre Royal, paliers visuels, et Clés Royales (chemin alternatif). Le coffre ne s'ouvre que si l'énergie (ou les clés) EST au max ET qu'au moins minBallsToOpen billes sont tombées depuis le dernier cycle — un live doit avoir réellement joué, pas seulement reçu quelques gros cadeaux. energyGoal/keys.goal calibrés par simulation (100k+ billes) pour ~10 min entre deux ouvertures sur un live actif, avec une contribution énergie/clés quasi égale.",
   "community": {
-    "energyGoal": 11000,
-    "startingEnergy": 8050,
+    "energyGoal": 28000,
+    "startingEnergy": 20500,
+    "minBallsToOpen": 1000,
     "stages": [
-      { "atPercent": 25, "id": "glow", "label": "Le coffre s'illumine" },
-      { "atPercent": 50, "id": "crack", "label": "Fissures apparaissent" },
-      { "atPercent": 75, "id": "shake", "label": "Le coffre tremble" },
-      { "atPercent": 100, "id": "open", "label": "Le coffre s'ouvre !" }
+      {
+        "atPercent": 25,
+        "id": "glow",
+        "label": "Le coffre s'illumine"
+      },
+      {
+        "atPercent": 50,
+        "id": "crack",
+        "label": "Fissures apparaissent"
+      },
+      {
+        "atPercent": 75,
+        "id": "shake",
+        "label": "Le coffre tremble"
+      },
+      {
+        "atPercent": 100,
+        "id": "open",
+        "label": "Le coffre s'ouvre !"
+      }
     ]
   },
   "engagementPoints": {
@@ -17,7 +34,7 @@
     "new_follow": 15
   },
   "keys": {
-    "goal": 500,
-    "startingKeys": 335
+    "goal": 1300,
+    "startingKeys": 870
   }
 }

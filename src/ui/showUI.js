@@ -20,6 +20,7 @@ export class ShowUI {
         this._cacheElements();
         this._bindEvents();
         this._wheelSpinning = false;
+        this._currentKingName = null;
     }
 
     _cacheElements() {
@@ -29,6 +30,10 @@ export class ShowUI {
 
             viewerBanner: document.getElementById('ui-viewer-banner'),
             viewerBannerText: document.getElementById('viewer-banner-text'),
+
+            currentKingBar: document.getElementById('ui-current-king'),
+            kingName: document.getElementById('king-name'),
+            kingPoints: document.getElementById('king-points'),
 
             chestPanel: document.getElementById('ui-chest'),
             chestIcon: document.getElementById('chest-icon'),
@@ -97,6 +102,9 @@ export class ShowUI {
         bus.on('jackpot:wheelResult', (data) => this._resolveWheel(data));
 
         bus.on('jackpot:coronation', (data) => this._showCoronation(data));
+
+        bus.on('leaderboard:kingCrowned', (data) => this._onKingCrowned(data));
+        bus.on('leaderboard:entryUpdated', (data) => this._onLeaderboardEntryUpdated(data));
     }
 
     /* ---------------- Bannière viewer ---------------- */
@@ -124,10 +132,19 @@ export class ShowUI {
 
     /* ---------------- Coffre Royal / Clés ---------------- */
 
-    _onCommunityUpdated({ energy, goal, percent, stageId, chestOpen }) {
+    _onCommunityUpdated({ energy, goal, percent, stageId, chestOpen, ballsLanded, minBallsToOpen, energyReady }) {
         this.els.chestFill.style.width = `${percent}%`;
         this.els.chestValue.textContent = `${energy} / ${goal}`;
-        this.els.chestStage.textContent = chestOpen ? 'Ouvert !' : this._stageLabel(stageId);
+
+        if (chestOpen) {
+            this.els.chestStage.textContent = 'Ouvert !';
+        } else if (energyReady && minBallsToOpen) {
+            // Énergie/clés au max, mais il manque encore des billes jouées
+            // avant l'ouverture réelle du coffre.
+            this.els.chestStage.textContent = `🔮 ${Math.min(ballsLanded, minBallsToOpen)}/${minBallsToOpen} billes`;
+        } else {
+            this.els.chestStage.textContent = this._stageLabel(stageId);
+        }
 
         const iconStage = chestOpen ? 'open' : (stageId || 'locked');
         this.els.chestIcon.setAttribute('class', `chest-icon stage-${iconStage}`);
@@ -282,6 +299,22 @@ export class ShowUI {
             this.els.coronationScene.classList.remove('visible');
             setTimeout(() => this.els.coronationScene.classList.add('hidden'), 500);
         }, totalMs);
+    }
+
+    /* ---------------- Roi du Royaume (bandeau permanent) ---------------- */
+
+    /** Nouveau roi : le bandeau reste affiché jusqu'au prochain couronnement (jamais d'auto-hide). */
+    _onKingCrowned({ playerName, totalValue }) {
+        this._currentKingName = playerName;
+        this.els.kingName.textContent = `@${playerName}`;
+        this.els.kingPoints.textContent = `${Math.round(totalValue).toLocaleString('fr-FR')} 🪙`;
+        this.els.currentKingBar.classList.remove('hidden');
+    }
+
+    /** Le total du roi continue d'évoluer s'il rejoue après son couronnement. */
+    _onLeaderboardEntryUpdated({ name, totalValue }) {
+        if (name !== this._currentKingName) return;
+        this.els.kingPoints.textContent = `${Math.round(totalValue).toLocaleString('fr-FR')} 🪙`;
     }
 
     /* ---------------- Utilitaires ---------------- */
