@@ -1,5 +1,5 @@
 {
-  "_comment": "Système de progression communautaire : énergie du Coffre Royal, paliers visuels, et Clés Royales (chemin alternatif). Le coffre ne s'ouvre que si l'énergie (ou les clés) EST au max ET qu'au moins minBallsToOpen billes sont tombées depuis le dernier cycle — un live doit avoir réellement joué, pas seulement reçu quelques gros cadeaux. energyGoal/keys.goal calibrés par simulation (100k+ billes) pour ~10 min entre deux ouvertures sur un live actif, avec une contribution énergie/clés quasi égale.",
+  "_comment": "Système de progression communautaire : énergie du Coffre Royal, paliers visuels, et Clés Royales (chemin alternatif). Le coffre ne s'ouvre que si l'énergie (ou les clés) EST au max ET qu'au moins minBallsToOpen billes sont tombées depuis le dernier cycle — un live doit avoir réellement joué, pas seulement reçu quelques gros cadeaux. Valeurs calibrées par simulation (120k billes) : les trois jauges se remplissent sur la même échelle de temps, soit ~28 min entre deux ouvertures sur un live actif, avec énergie et clés qui contribuent à parts quasi égales.",
   "community": {
     "energyGoal": 28000,
     "startingEnergy": 20500,
